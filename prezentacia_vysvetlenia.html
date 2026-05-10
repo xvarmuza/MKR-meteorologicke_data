@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<title>Prezentácia – Hĺbkové vysvetlenia pre obhajobu</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; background: #eceff1; color: #1a1a1a; padding: 24px 16px; }
+
+h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bottom: 4px; }
+.page-sub { text-align: center; color: #78909c; font-size: 10pt; margin-bottom: 28px; }
+
+/* === SLIDE BLOK === */
+.slide-blok { background: white; border-radius: 14px; box-shadow: 0 3px 16px rgba(0,0,0,0.09); max-width: 920px; margin: 0 auto 44px; overflow: hidden; }
+.slide-hlavicka { background: linear-gradient(135deg, #1a237e, #3949ab); color: white; padding: 16px 26px; display: flex; align-items: center; gap: 14px; }
+.slide-num { background: rgba(255,255,255,0.2); border-radius: 50%; width: 38px; height: 38px; min-width: 38px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; }
+.slide-nazov { font-size: 1.2rem; font-weight: 600; }
+.slide-telo { padding: 22px 26px; }
+
+/* Recap - co bolo na slajde */
+.recap { background: #f0f4ff; border-left: 4px solid #3949ab; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 22px; font-size: 10pt; color: #333; }
+.recap strong { color: #1a237e; }
+
+/* Sekcie s otazkami */
+.sekcia-title { font-size: 11pt; font-weight: 700; color: #455a64; text-transform: uppercase; letter-spacing: 0.6px; margin: 18px 0 10px; padding-bottom: 5px; border-bottom: 2px solid #cfd8dc; }
+
+/* Q&A karty */
+.qa { border: 1px solid #e8eaf6; border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+.qa-q { background: #e8eaf6; padding: 11px 16px; font-size: 10.5pt; font-weight: 600; color: #1a237e; }
+.qa-q::before { content: "Q: "; color: #3949ab; }
+.qa-a { padding: 13px 16px; font-size: 10.5pt; line-height: 1.75; color: #2a2a2a; }
+.qa-a::before { content: "A: "; font-weight: 700; color: #2e7d32; }
+.qa-a ul { margin: 8px 0 6px 22px; }
+.qa-a li { margin-bottom: 5px; }
+.qa-a code { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 1px 6px; font-family: 'Consolas', monospace; font-size: 9.5pt; }
+.qa-a pre { background: #f8f9ff; border: 1px solid #e0e3ff; border-radius: 6px; padding: 10px 14px; font-family: 'Consolas', monospace; font-size: 9pt; margin: 8px 0; line-height: 1.5; overflow-x: auto; }
+.qa-a .formula { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 8px 14px; font-family: 'Consolas', monospace; font-size: 10pt; margin: 8px 0; color: #5d4037; }
+.qa-a .poznamka { background: #e8f5e9; border-left: 3px solid #388e3c; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 9.5pt; color: #2e7d32; }
+.qa-a .varovanie { background: #fff3e0; border-left: 3px solid #f57c00; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 9.5pt; color: #e65100; }
+
+/* Kľúčové pojmy */
+.pojmy { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+.pojem { background: #e8eaf6; color: #1a237e; border-radius: 20px; padding: 4px 14px; font-size: 9.5pt; font-weight: 600; }
+
+@media print { body { background: white; padding: 0; } .slide-blok { box-shadow: none; border: 1px solid #ccc; margin-bottom: 20px; } }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Prezentácia — Hĺbkové vysvetlenia pre obhajobu</h1>
+<div class="page-sub">MKR Semestrálny projekt &nbsp;|&nbsp; Štatistická analýza meteorologických dát &nbsp;|&nbsp; Každá možná otázka profesora s odpoveďou</div>
+
+<!-- ===== RÝCHLY ŤAHÁK ===== -->
+<div style="background:white;border-radius:14px;box-shadow:0 3px 16px rgba(0,0,0,0.09);max-width:920px;margin:0 auto 44px;overflow:hidden;">
+<div style="background:linear-gradient(135deg,#b71c1c,#e53935);color:white;padding:16px 26px;display:flex;align-items:center;gap:14px;">
+  <div style="background:rgba(255,255,255,0.2);border-radius:50%;width:38px;height:38px;min-width:38px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;">⚡</div>
+  <div style="font-size:1.2rem;font-weight:700;">Rýchly ťahák — kľúčové čísla pre obhajobu</div>
+  <div style="margin-left:auto;background:rgba(255,255,255,0.15);border-radius:12px;padding:3px 12px;font-size:0.8rem;">Otvoriť PRED prezentáciou</div>
+</div>
+<div style="padding:22px 26px;">
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;">
+  <div style="background:#fff3e0;border:2px solid #ff6f00;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Surové vzorky</div>
+    <div style="font-size:22pt;font-weight:700;color:#e65100;">25 600</div>
+    <div style="font-size:9pt;color:#888;">meteo_data_raw.csv</div>
+  </div>
+  <div style="background:#fce4ec;border:2px solid #c62828;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Poškodené</div>
+    <div style="font-size:22pt;font-weight:700;color:#c62828;">189</div>
+    <div style="font-size:9pt;color:#888;">0.74% — fyzikálne medze</div>
+  </div>
+  <div style="background:#e8f5e9;border:2px solid #2e7d32;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Čisté vzorky</div>
+    <div style="font-size:22pt;font-weight:700;color:#2e7d32;">25 411</div>
+    <div style="font-size:9pt;color:#888;">cleaned.csv</div>
+  </div>
+  <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">NaN hodnoty</div>
+    <div style="font-size:22pt;font-weight:700;color:#1a237e;">0</div>
+    <div style="font-size:9pt;color:#888;">dataset kompletný</div>
+  </div>
+  <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Chýbajúce dni</div>
+    <div style="font-size:22pt;font-weight:700;color:#1a237e;">8</div>
+    <div style="font-size:9pt;color:#888;">357/365 dní pokrytých</div>
+  </div>
+  <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
+    <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Chybové skupiny</div>
+    <div style="font-size:22pt;font-weight:700;color:#1a237e;">151</div>
+    <div style="font-size:9pt;color:#888;">max dĺžka = 12</div>
+  </div>
+</div>
+
+<table style="width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:16px;">
+<thead><tr><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Parametre</th><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Hodnota</th><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Poznámka</th></tr></thead>
+<tbody>
+<tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Meraných parametrov</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">18</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">vrátane DateTime</td></tr>
+<tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Parametre v korelácii</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">16</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">bez SunLatitude, SunLongitude (std=0)</td></tr>
+<tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Irradiance — priemer</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">286.6 W/m²</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">std = 282.0 W/m²</td></tr>
+<tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Irradiance — maximum</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">1 440.6 W/m²</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">solárna konštanta ~1361 W/m²</td></tr>
+<tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Irradiance — minimum (chybné)</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;color:#c62828;">−0.63 W/m²</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">fyzikálne nemožné → poškodená vzorka</td></tr>
+<tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">FanSpeed ↔ Pressure</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;color:#c62828;">r = −0.998</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">nepriama závislosť cez teplotu (confounder)</td></tr>
+<tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Teplotné snímače navzájom</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;color:#2e7d32;">r ≈ +0.999</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">BodyTemp ↔ PressureTemp ↔ HumidityTemp</td></tr>
+<tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">SunZenith ↔ Irradiance</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;color:#2e7d32;">r = +0.790</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">SunZenith = ELEVAČNÝ uhol (nie zenitový!)</td></tr>
+<tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Lokalita</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">Alpnach, CH</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">46.94° N, nadm. výška ~433 m</td></tr>
+<tr style="background:#f8f9ff;"><td style="padding:7px 12px;">Prístroj</td><td style="padding:7px 12px;font-weight:700;">SMP10 + CVF4</td><td style="padding:7px 12px;color:#666;">Kipp &amp; Zonen, ISO 9060 trieda 2</td></tr>
+</tbody>
+</table>
+
+<div style="background:#fff8e1;border-left:4px solid #fbc02d;padding:12px 16px;border-radius:0 8px 8px 0;font-size:10pt;">
+<strong>Chybové skupiny — distribúcia:</strong> 137×1, 7×2, 3×3, 1×4, 1×5, 1×8, 1×12 &nbsp;|&nbsp;
+<strong>Chýbajúce dni:</strong> 2018-03-31, 2018-08-31, 2018-09-01 až 09-06 &nbsp;|&nbsp;
+<strong>Vzorkovacia frekvencia:</strong> ~70 vzoriek/deň (~6/hod)
+</div>
+
+</div>
+</div>
+
+<!-- ===== SLAJD 1 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">1</div><div class="slide-nazov">Titulný slajd</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> Názov projektu, predmet MKR, 25 600 vzoriek, 18 parametrov, 2026.</div>
+
+<div class="sekcia-title">Úvodné otázky</div>
+
+<div class="qa"><div class="qa-q">Čo je cieľom tohoto projektu?</div>
+<div class="qa-a">Vykonať základnú štatistickú analýzu meteorologickej dátovej sady — identifikovať chyby v dátach, odstrániť ich, vizualizovať slnečné žiarenie v čase a kvantifikovať vzájomné závislosti medzi meranými parametrami pomocou korelačnej analýzy. Výstupom je vyčistená dátová sada, sada grafov a prenosný HTML report.</div></div>
+
+<div class="qa"><div class="qa-q">Kde dáta pochádzajú a čo merajú?</div>
+<div class="qa-a">Dáta pochádzajú z automatickej meteorologickej stanice na lokalite Alpnach, Švajčiarsko (46,94° N). Stanica je vybavená pyranometrom Kipp &amp; Zonen SMP10 s ventilovaným krytom CVF4. Merajú sa predovšetkým hodnoty globálneho slnečného žiarenia plus pomocné veličiny senzora (teploty, tlak, vlhkosť, mechanika ventilátora) a astronomická poloha slnka.</div></div>
+
+</div></div>
+
+<!-- ===== SLAJD 2 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">2</div><div class="slide-nazov">Zadanie a cieľ projektu</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> 5 úloh zadania, vstup/výstup projektu.</div>
+
+<div class="sekcia-title">O zadaní</div>
+
+<div class="qa"><div class="qa-q">Čo znamená "základná štatistická analýza dát"?</div>
+<div class="qa-a">Zahŕňa:
+<ul>
+<li><strong>Opisné štatistiky</strong> — count, mean, std, min, percentily, max pre každý parameter (pandas describe())</li>
+<li><strong>Analýzu kompletnosti</strong> — chýbajúce hodnoty (NaN) a celé chýbajúce dni</li>
+<li><strong>Detekciu outlierov / chybných hodnôt</strong> — pomocou fyzikálnych medzí</li>
+<li><strong>Vizualizáciu časových radov</strong> — ročný a mesačný priebeh žiarenia</li>
+<li><strong>Korelačnú analýzu</strong> — Pearsonova matica závislostí medzi parametrami</li>
+</ul></div></div>
+
+<div class="qa"><div class="qa-q">Prečo ste najprv čistili dáta a až potom analyzovali?</div>
+<div class="qa-a">Poradie je zámerné: štatistiky, korelácie a grafy vypočítané zo surových dát by boli skreslené fyzikálne chybnými hodnotami. Napríklad záporné hodnoty žiarenia (−0.63 W/m²) by znížili priemer, a extrémne hodnoty mimo fyzikálnych medzí by deformovali korelácie.
+<div class="poznamka">V praxi sa analýza robí v dvoch kolách: raz na raw dátach (identifikácia problémov), raz na cleaned dátach (výsledné štatistiky). Tu sme robili analýzu na raw dátach so zámerom ukázať surový stav.</div></div></div>
+
+</div></div>
+
+<!-- ===== SLAJD 3 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">3</div><div class="slide-nazov">Dataset a merací systém</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> Alpnach CH, Kipp &amp; Zonen SMP10, CVF4, 18 parametrov, ~70 vzoriek/deň.</div>
+
+<div class="sekcia-title">Merací systém</div>
+
+<div class="qa"><div class="qa-q">Čo je pyranometer a prečo SMP10?</div>
+<div class="qa-a">Pyranometer je prístroj na meranie globálneho slnečného žiarenia — súčtu priameho a difúzneho žiarenia dopadajúceho na horizontálnu plochu. Princíp: termočlánkový snímač absorbuje žiarenie, vzniká teplotný gradient medzi čiernou absorbčnou plochou a teplomerom tela → napätie úmerné výkonu žiarenia [W/m²].
+<br><br>SMP10 (Kipp &amp; Zonen) je pyranometer 2. triedy podľa ISO 9060 — vhodný pre vedecké merania. Ventilovaný kryt CVF4 ofukuje sklenený kryt horúcim vzduchom, čím bráni kondenzácii, námraze a zašpineniu, ktoré by skresľovali meranie.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je parameter SunZenith — zenitový uhol alebo elevačný uhol?</div>
+<div class="qa-a">Napriek názvu SunZenith sa tento parameter v datasete správa ako <strong>elevačný uhol</strong> (nie štandardný zenitový uhol). Dôkazy:
+<ul>
+<li>Rozsah: min = −0.26°, max = 66.5°. Štandardný zenitový uhol by bol 0° (slnko v nadhlavníku) až 90° (horizont) — záporné hodnoty sú fyzikálne nemožné pre zenitový uhol.</li>
+<li>Korelácia s Irradiance: <strong>r = +0.790 (pozitívna)</strong>. Pre štandardný zenitový uhol by bola závislosť negatívna (čím vyšší zenitový uhol = slnko nižšie = menej žiarenia). Tu je závislosť kladná: vyšší SunZenith → viac žiarenia → ide o elevačný uhol.</li>
+<li>Na 46.94° N (Alpnach) dosahuje slnko maximálnu výšku ~66.5° v lete — čo presne zodpovedá maximu v datasete.</li>
+</ul>
+<div class="varovanie">Pozor: v kóde FYZIKALNE_MEDZE je definovaný rozsah (0, 90)°, čo flaguje záporné hodnoty ako poškodené. Ide o správne správanie — záporný elevačný uhol fyzikálne neexistuje.</div></div></div>
+
+<div class="qa"><div class="qa-q">Prečo sú SunLatitude a SunLongitude vylúčené z korelačnej analýzy?</div>
+<div class="qa-a">SunLatitude a SunLongitude sú zemepisné súradnice stanice — konštanty, ktoré sa počas celého merania nemenia (stanica stojí na jednom mieste). Ich štandardná odchýlka = 0.
+<br><br>Pearsonov korelačný koeficient je definovaný ako:
+<div class="formula">r = Cov(X, Y) / (std(X) · std(Y))</div>
+Ak std(X) = 0 (konštanta), dochádza k deleniu nulou → hodnota r je matematicky nedefinovaná (NaN). pandas automaticky vráti NaN pre takéto stĺpce, PyTorch by vyhodil chybu delenia nulou.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je parameter RelativeHumidity — prečo má maximum 6.79?</div>
+<div class="qa-a">Toto je neobvyklá hodnota pre relatívnu vlhkosť v % (kde by maximum bolo 100%). Existujú tri možné vysvetlenia:
+<ul>
+<li>Parameter nemusí byť relatívna vlhkosť v %, ale napríklad absolútna vlhkosť v g/m³ alebo špecifická vlhkosť</li>
+<li>Môže ísť o chybu v názvovaní stĺpcov pri exporte dát</li>
+<li>Hodnoty sú fyzikálne v rozsahu (0, 6.79) — neprekračujú fyzikálnu medzu (0, 100), takže žiadna vzorka nebola vyradená na základe tohto parametra</li>
+</ul>
+<div class="poznamka">Pre účely projektu sme parameter spracovali podľa definovaných fyzikálnych medzí (0, 100) a neinterpretovali sme jeho fyzikálny zmysel nad rámec zadania.</div></div></div>
+
+<div class="sekcia-title">Parametre datasetu — detaily</div>
+
+<div class="qa"><div class="qa-q">Čo je rozdiel medzi Irradiance a IrradianceNotCompensated?</div>
+<div class="qa-a"><strong>Irradiance</strong> je teplotne kompenzovaná hodnota slnečného žiarenia [W/m²]. <strong>IrradianceNotCompensated</strong> je surová, nekompenzovaná hodnota priamo z termočlánkového senzora.
+<br><br><strong>Fyzikálna príčina kompenzácie:</strong> Pyranometer meria žiarenie ako tepelný tok (teplotný rozdiel medzi čiernou absorbčnou plochou a telom prístroja). Keď sa zmení teplota okolia, mení sa aj teplota tela prístroja → mení sa referenčná teplota → senzor by meral inak pri rovnakom žiarení. Teplotná kompenzácia (pomocou BodyTemperature) koriguje tento efekt a dáva hodnotu nezávislú od teploty okolia.
+<br><br><strong>V praxi:</strong> pri stabilných teplotách sú obe hodnoty takmer rovnaké. Rozdiel je výraznejší pri rýchlych zmenách teploty (napr. ráno pri oteplovaní). Pre štatistickú analýzu používame kompenzovanú hodnotu <code>Irradiance</code> — je fyzikálne presnejšia.
+<div class="poznamka">Korelácia medzi Irradiance a IrradianceNotCompensated je typicky r > 0.999 — kompenzácia robí len malú korekciu, nie zásadnú zmenu hodnôt.</div></div></div>
+
+<div class="qa"><div class="qa-q">Čo meria parameter TiltAngle a čo nám hovorí jeho malý rozsah?</div>
+<div class="qa-a"><strong>TiltAngle</strong> meria sklon (naklonenie) pyranometra od horizontálnej polohy v stupňoch. Rozsah v datasete: min ≈ 0°, max ≈ 2.08°.
+<br><br><strong>Fyzikálny zmysel:</strong> Pyranometer má byť nainštalovaný presne horizontálne (TiltAngle = 0°), aby meral celkové globálne žiarenie dopadajúce na horizontálnu plochu. Sklon by spôsobil, že jedna strana prístroja by "videla" viac oblohy ako druhá → systematická chyba merania.
+<br><br><strong>Čo hovorí max 2.08°:</strong> Inštalácia je takmer dokonalá — odchýlka menej ako 2.1° od horizontu. Podľa normy ISO 9060 je prijateľný sklon do 5°. Malá variabilita TiltAngle (~0–2°) naznačuje, že pristroj ostáva stabilný (vietor ho nenakláňa, stojí pevne).
+<div class="poznamka">Napriek malému sklonu TiltAngle nie je konštanta (std > 0), preto je zahrnutý v korelačnej analýze ako bežný parameter.</div></div></div>
+
+<div class="qa"><div class="qa-q">Prečo sú HeaterCurrent a FanCurrent takmer konštantné? (rozsah ~0.32–0.34 A a 0.06–0.07 A)</div>
+<div class="qa-a">Ventilátor (FanCurrent) a ohrievač (HeaterCurrent) CVF4 krytu sú <strong>regulované na konštantný výkon</strong> — nie manuálne nastavené raz, ale elektronicky riadené riadiacou jednotkou zariadenia.
+<ul>
+<li><strong>FanCurrent ≈ 0.064–0.073 A</strong>: Ventilátor beží takmer konštantnou rýchlosťou. FanSpeed (RPM) variuje viac ako FanCurrent, pretože RPM závisí od hustoty vzduchu (vzduch je odporom), ale prúd (energia) zostáva stabilný.</li>
+<li><strong>HeaterCurrent ≈ 0.320–0.337 A</strong>: Ohrievač udržiava stálu teplotu ofukovacieho vzduchu (zabraňuje námraze/kondenzácii). Regulátor udržiava konštantný výkon ohrevu.</li>
+</ul>
+Malá variabilita (nie nulová) odráža reálne fyzikálne výkyvy (napätie napájania, teplota okolia). Keby boli úplne konštantné (std=0), boli by vylúčené z korelácie ako SunLatitude/SunLongitude.</div></div>
+
+<div class="qa"><div class="qa-q">Ako ste parsovali DateTime — čo je ten #frame_number a prečo format='mixed'?</div>
+<div class="qa-a">Surový CSV má DateTime v tvare: <code>2022-01-01 00:00:00#1</code> — štandardný dátumový formát plus prípona <code>#číslo_vzorky</code>.
+<pre>
+# Krok 1: odstrihnutie prípony #frame
+df['DateTime'] = df['DateTime'].str.split('#').str[0]
+# '2022-01-01 00:00:00#1' → '2022-01-01 00:00:00'
+
+# Krok 2: konverzia reťazca na datetime objekt
+df['DateTime'] = pd.to_datetime(df['DateTime'], format='mixed', dayfirst=False)
+</pre>
+<strong>Prečo <code>format='mixed'</code>?</strong> Pandas nedokáže vždy automaticky zistiť formát dátumu. <code>format='mixed'</code> povolí parsovanie rôznych formátov v rámci jedného stĺpca — užitočné keď nie sme si 100% istí uniformitou formátu v celom súbore (napr. niektoré záznamy môžu mať drobné odchýlky).
+<br><br><strong>Prečo <code>dayfirst=False</code>?</strong> Tento parameter hovorí pandas, že pri nejednoznačných dátumoch (napr. "01/02/03") má deň byť na KONCI (americký formát MM/DD/YY), nie na začiatku. Pre náš ISO formát (YYYY-MM-DD) je to bezpredmetné, ale je dobrá prax to explicitne nastaviť.
+<div class="poznamka">Keby sme vynechali <code>str.split('#').str[0]</code>, pandas by nedokázal parsovať dátum a vrátil by NaT (Not a Time) pre všetky záznamy.</div></div></div>
+
+<div class="pojmy"><span class="pojem">Pyranometer</span><span class="pojem">ISO 9060</span><span class="pojem">CVF4</span><span class="pojem">Elevačný uhol</span><span class="pojem">Zenitový uhol</span><span class="pojem">Pearson – delenie nulou</span><span class="pojem">Teplotná kompenzácia</span><span class="pojem">TiltAngle</span><span class="pojem">format='mixed'</span></div>
+</div></div>
+
+<!-- ===== SLAJD 4 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">4</div><div class="slide-nazov">Architektúra riešenia — 6 modulov, pipeline</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> Tabuľka 6 modulov, pipeline raw→clean→žiarenie→korelácie→HTML.</div>
+
+<div class="sekcia-title">Dizajn a štruktúra kódu</div>
+
+<div class="qa"><div class="qa-q">Prečo ste kód rozdelili do modulov a nie napísali všetko do jedného súboru?</div>
+<div class="qa-a">Modulárny dizajn prináša niekoľko výhod:
+<ul>
+<li><strong>Prehľadnosť</strong> — každý modul má jednu zodpovednosť (Single Responsibility Principle)</li>
+<li><strong>Testovateľnosť</strong> — každú funkciu možno testovať izolovane</li>
+<li><strong>Znovupoužiteľnosť</strong> — napr. <code>nacitanie_dat.py</code> možno importovať v akomkoľvek skripte</li>
+<li><strong>Flexibilita</strong> — zmena vstupného CSV v <code>main.py</code> (jeden riadok) automaticky zmení celú analýzu</li>
+</ul></div></div>
+
+<div class="qa"><div class="qa-q">Prečo pipeline beží v tomto poradí — prečo najprv čistenie a nie analýza žiarenia?</div>
+<div class="qa-a">Poradie je logicky zdôvodnené:
+<ol>
+<li>Najprv <strong>štatistiky</strong> — na surových dátach, aby sme videli celkový stav vrátane chýb</li>
+<li>Potom <strong>analýza chýb</strong> — identifikácia problémov je podmienkou pre čistenie</li>
+<li><strong>Čistenie</strong> — na základe výsledkov analýzy chýb</li>
+<li>Analýzy žiarenia a korelácie — v projekte bežia na surových dátach (ako je zadané), ale funkcia vycisti_a_uloz() uloží cleaned.csv pre prípadné ďalšie použitie</li>
+</ol>
+<div class="poznamka">main.py má zakomentovaný blok kde CSV = cleaned.csv — stačí odkomentovať a celá analýza sa zopakuje na čistých dátach.</div></div></div>
+
+<div class="qa"><div class="qa-q">Ako funguje zachytávanie výstupu v generuj_html.py?</div>
+<div class="qa-a">Využívame Python knižnice <code>io</code> a <code>contextlib</code>:
+<pre>
+def zachyt_vystup(funkcia, *args, **kwargs):
+    buffer = io.StringIO()          # In-memory textový buffer
+    with contextlib.redirect_stdout(buffer):  # Presmerovanie print() do buffra
+        vysledok = funkcia(*args, **kwargs)
+    return vysledok, buffer.getvalue()  # Vrátime výsledok + zachytený text
+</pre>
+Normálne <code>print()</code> píše na <code>sys.stdout</code> (terminál). <code>redirect_stdout</code> dočasne nahradí <code>sys.stdout</code> naším bufferom <code>StringIO</code>. Po skončení bloku <code>with</code> sa stdout vráti späť na terminál. <code>buffer.getvalue()</code> vráti všetko čo bolo "vyprintované" počas behu funkcie ako reťazec — ten vložíme do HTML reportu.</div></div>
+
+<div class="qa"><div class="qa-q">Ako sú obrázky vložené do HTML — prečo nie externé súbory?</div>
+<div class="qa-a">Obrázky sú vložené priamo do HTML ako <strong>Base64 Data URL</strong>:
+<pre>
+# Kódovanie PNG do base64
+with open(cesta, 'rb') as f:
+    data = f.read()
+b64_string = base64.b64encode(data).decode('utf-8')
+
+# Vloženie do HTML
+&lt;img src="data:image/png;base64,{b64_string}"&gt;
+</pre>
+<strong>Prečo?</strong> Self-contained HTML súbor — nezávisí od externých súborov. Môžeme ho presunúť, zdieľať emailom alebo otvoriť offline. Nevýhoda: väčší súbor (~4.7 MB vs ~500 kB bez obrázkov).
+<div class="poznamka">Base64 kóduje binárne dáta (bajty 0–255) do ASCII znakov (64 povolených znakov). Každé 3 bajty → 4 znaky, takže veľkosť rastie o ~33%.</div></div></div>
+
+<div class="sekcia-title">Pipeline krok po kroku — klasická otázka</div>
+
+<div class="qa"><div class="qa-q">Popíšte krok po kroku čo robí main.py keď ho spustíme.</div>
+<div class="qa-a">
+<ol style="margin-left:20px;line-height:2;">
+<li><strong>Načítanie dát</strong> — <code>nacitaj_data(CSV_SUBOR)</code> z <code>nacitanie_dat.py</code>: prečíta CSV, odreže <code>#frame</code> z DateTime, parsuje datetime, pridá pomocné stĺpce Date/Hour/Month/DayOfYear.</li>
+<li><strong>Základné štatistiky</strong> — <code>vypis_zakladne_statistiky(df)</code> z <code>statistiky.py</code>: zavolá <code>df.describe()</code>, vypíše count/mean/std/min/percentily/max pre 18 parametrov. Výstup sa zachytí cez <code>redirect_stdout</code>.</li>
+<li><strong>Detekcia NaN</strong> — <code>skontroluj_nan(df)</code>: pre každý stĺpec spočíta <code>isnull().sum()</code>. Výsledok: 0 NaN.</li>
+<li><strong>Detekcia chýbajúcich dní</strong> — <code>najdi_chybajuce_dni(df)</code>: set difference medzi expected dátumami (pd.date_range) a prítomnými. Výsledok: 8 dní.</li>
+<li><strong>Detekcia poškodených vzoriek</strong> — <code>najdi_poskodene(df, FYZIKALNE_MEDZE)</code>: pre každý parameter OR-maska hodnôt mimo fyzikálnych medzí. Výsledok: 189 vzoriek, 151 skupín.</li>
+<li><strong>Čistenie a uloženie</strong> — <code>vycisti_a_uloz(df, ...)</code>: odstráni 189 riadkov, uloží cleaned.csv (bez pomocných stĺpcov).</li>
+<li><strong>Analýza žiarenia</strong> — <code>analyzuj_ziarenie(df)</code>: ročný priebeh (groupby DayOfYear) + 12 mesačných profilov (groupby Month, Hour). Uloží 2 PNG grafy.</li>
+<li><strong>Korelačná analýza</strong> — <code>korelacna_analyza(df)</code>: matica 16×16 Pearsonových koeficientov (pandas + PyTorch), heatmapa, 12 scatter plotov. Uloží 2 PNG grafy.</li>
+<li><strong>Generovanie HTML reportu</strong> — <code>generuj_report(df, ...)</code>: zostaví HTML report, vloží zachytené texty a base64 obrázky, uloží report.html.</li>
+</ol>
+<div class="poznamka">Celý beh trvá ~10–30 sekúnd (závisí od HW). Výstupy sú v adresári <code>output_analyza_train_raw/</code>.</div></div></div>
+
+<div class="pojmy"><span class="pojem">Single Responsibility</span><span class="pojem">redirect_stdout</span><span class="pojem">io.StringIO</span><span class="pojem">base64</span><span class="pojem">Data URL</span><span class="pojem">Pipeline</span></div>
+</div></div>
+
+<!-- ===== SLAJD 5 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">5</div><div class="slide-nazov">Použité technológie a prečo PyTorch</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> pandas, matplotlib, seaborn, numpy, PyTorch, io.StringIO, base64.</div>
+
+<div class="sekcia-title">Technologické voľby</div>
+
+<div class="qa"><div class="qa-q">Prečo ste použili PyTorch na štatistiku namiesto toho aby ste použili len pandas/numpy?</div>
+<div class="qa-a">PyTorch bol použitý z dvoch dôvodov:
+<ol>
+<li><strong>Nezávislé overenie (cross-validation)</strong> — rovnaká štatistika vypočítaná dvoma rôznymi knižnicami. Ak sa výsledky zhodujú (čo sa zhodujú), zvyšuje to dôveru v správnosť výpočtu. pandas používa NumPy internálne, PyTorch má vlastnú implementáciu.</li>
+<li><strong>Demonštrácia použitia tenzorových operácií</strong> — PyTorch je primárne určený pre strojové učenie (neurónové siete), ale jeho tenzory sú všeobecné N-dimenzionálne polia použiteľné na akékoľvek numerické výpočty.</li>
+</ol>
+<div class="poznamka">Pre produkčnú štatistiku by sme použili iba pandas/scipy — sú na to optimalizované. PyTorch tu slúži ako "second opinion".</div></div></div>
+
+<div class="qa"><div class="qa-q">Čo je to tenzor (tensor) v PyTorch?</div>
+<div class="qa-a">Tenzor je N-dimenzionálne numerické pole — zovšeobecnenie skaláru (0D), vektoru (1D), matice (2D) na ľubovoľný počet dimenzií.
+<ul>
+<li>Skalár (0D): <code>torch.tensor(3.14)</code></li>
+<li>Vektor (1D): <code>torch.tensor([1.0, 2.0, 3.0])</code> — jeden stĺpec dát</li>
+<li>Matica (2D): <code>torch.tensor(df.values)</code> — celá tabuľka dát</li>
+</ul>
+V projekte: <code>T = torch.tensor(df_c.values, dtype=torch.float32)</code> — celá DataFrame tabuľka 16 parametrov ako 2D tenzor. Stĺpce sa vyberú indexom: <code>T[:, 0]</code> = stĺpec Irradiance.</div></div>
+
+<div class="qa"><div class="qa-q">Prečo seaborn pre heatmapu a nie matplotlib priamo?</div>
+<div class="qa-a">seaborn.heatmap poskytuje nad matplotlib:
+<ul>
+<li>Automatické anotácie hodnôt v každej bunke (<code>annot=True</code>)</li>
+<li>Zabudovanú farebnú škálu s centrom (<code>center=0</code> → biela pri r=0)</li>
+<li>Stýlovanie mriežky a štítkov stĺpcov/riadkov</li>
+<li>Formátovanie čísel (<code>fmt='.2f'</code> — 2 desatinné miesta)</li>
+</ul>
+Priamo cez matplotlib by sme museli toto všetko implementovať ručne — <code>ax.imshow()</code> + textové anotácie v cykle + colorbar + labeling.</div></div>
+
+<div class="qa"><div class="qa-q">Aký je rozdiel medzi pandas, numpy a PyTorch — prečo nie je jedna knižnica dosť?</div>
+<div class="qa-a">
+<ul>
+<li><strong>pandas</strong> — práca s tabuľkovými dátami (DataFrame): načítanie CSV, groupby, corr(), describe(). Orientovaný na stĺpce s menami a heterogénne typy.</li>
+<li><strong>numpy</strong> — homogénne numerické polia, matematické operácie. pandas stavia na numpy.</li>
+<li><strong>PyTorch</strong> — tenzory s automatickým derivovaním (autograd), GPU akcelerácia, optimalizovaný pre deep learning. Tenzory sú podobné numpy, ale s GPU podporou.</li>
+</ul>
+V projekte: pandas načíta a organizuje dáta → numpy robí numpy-level operácie (napr. np.mean) → PyTorch overuje výsledky tenzorovo.</div></div>
+
+<div class="pojmy"><span class="pojem">Tenzor</span><span class="pojem">dtype=torch.float32</span><span class="pojem">Cross-validation výsledkov</span><span class="pojem">sns.heatmap</span><span class="pojem">annot=True</span></div>
+</div></div>
+
+<!-- ===== SLAJD 6 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">6</div><div class="slide-nazov">Analýza kvality dát — NaN a chýbajúce dni</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> 0 NaN, 8 chýbajúcich dní (2018-03-31, 2018-08-31, 2018-09-01 až 09-06), 357/365 dní.</div>
+
+<div class="sekcia-title">Metodológia detekcie</div>
+
+<div class="qa"><div class="qa-q">Ako ste technicky detegovali NaN hodnoty?</div>
+<div class="qa-a">Dve úrovne kontroly:
+<pre>
+# 1. Počet NaN v každom stĺpci
+chybajuce = df[stlpce].isnull().sum()   # Series: stĺpec → počet NaN
+
+# 2. Riadky s aspoň jednou NaN hodnotou
+riadky_s_nan = df[stlpce].isnull().any(axis=1).sum()
+# .any(axis=1) → True ak aspoň jedna hodnota v riadku je NaN
+</pre>
+V datasete: výsledok je 0 pre všetky stĺpce a 0 pre riadky. Dataset je kompletný — žiadna imputácia nebola potrebná.</div></div>
+
+<div class="qa"><div class="qa-q">Ako ste identifikovali chýbajúce dni — algoritmus?</div>
+<div class="qa-a">
+<pre>
+# Generovanie kompletného radu dátumov (každý deň od prvého po posledný)
+min_datum = df['DateTime'].min().date()
+max_datum = df['DateTime'].max().date()
+vsetky_dni = pd.date_range(start=min_datum, end=max_datum, freq='D').date
+
+# Množina dní skutočne prítomných v datasete
+pritomne_dni = set(df['Date'].unique())
+
+# Chýbajúce = tie čo by mali byť, ale nie sú
+chybajuce_dni = sorted(set(vsetky_dni) - pritomne_dni)
+</pre>
+Ide o množinový rozdiel (set difference). Výsledok: 8 dní.</div></div>
+
+<div class="qa"><div class="qa-q">Prečo chýba práve 2018-03-31 a 2018-08-31 + 01–06.09.?</div>
+<div class="qa-a">Presná príčina nie je z datasetu zistiteľná — mohlo ísť o:
+<ul>
+<li>Výpadok napájania stanice alebo komunikácie</li>
+<li>Plánovanú údržbu zariadenia</li>
+<li>Technickú závadu</li>
+</ul>
+Dôležité je, že chýbajú <em>celé dni</em> — nie len niektoré hodnoty. To naznačuje systémový výpadok, nie len problém jedného senzora. Výpadok v septembri (7 dní za sebou) je dlhší — pravdepodobne viacdenná porucha alebo servis.</div></div>
+
+<div class="qa"><div class="qa-q">Aký dopad majú chýbajúce dni na analýzu?</div>
+<div class="qa-a">Minimálny — 8 dní z ~365 = 2.2% straty. Pre ročnú analýzu žiarenia (groupby DayOfYear) to znamená, že pre 8 dní v roku nie je k dispozícii priemer — tieto dni jednoducho nebudú mať bod v grafe alebo budú mať NaN hodnotu priemeru. Výsledky analýzy ostávajú štatisticky platné.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je stĺpec Date, Hour, Month, DayOfYear — prečo ste ich pridali?</div>
+<div class="qa-a">Sú to <strong>pomocné stĺpce</strong> odvodené z DateTime, ktoré umožňujú efektívne zoskupovanie (groupby):
+<ul>
+<li><code>Date</code> = len dátum (bez hodiny) — pre detekciu chýbajúcich dní</li>
+<li><code>Hour</code> = hodina (0–23) — pre mesačné denné profily (groupby Hour)</li>
+<li><code>Month</code> = mesiac (1–12) — pre filtrovanie podľa mesiaca</li>
+<li><code>DayOfYear</code> = deň v roku (1–366) — pre ročný graf žiarenia (groupby DayOfYear)</li>
+</ul>
+Neukládajú sa do cleaned.csv — sú len pracovné stĺpce v pamäti.</div></div>
+
+<div class="pojmy"><span class="pojem">isnull().sum()</span><span class="pojem">any(axis=1)</span><span class="pojem">pd.date_range</span><span class="pojem">set difference</span><span class="pojem">DayOfYear</span></div>
+</div></div>
+
+<!-- ===== SLAJD 7 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">7</div><div class="slide-nazov">Detekcia poškodených vzoriek — fyzikálne medze</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> FYZIKALNE_MEDZE, 189 poškodených (0.74%), 151 skupín, max=12, distribúcia 137×1, 7×2...</div>
+
+<div class="sekcia-title">Metodológia detekcie — kľúčová časť projektu</div>
+
+<div class="qa"><div class="qa-q">Čo je FYZIKALNE_MEDZE a odkiaľ pochádzajú hodnoty?</div>
+<div class="qa-a">Je to Python slovník (dict) definovaný v <code>analyza_chyb.py</code>, kde pre každý parameter je uložená dvojica (min, max) — interval fyzikálne reálnych hodnôt:
+<pre>
+FYZIKALNE_MEDZE = {
+    'Irradiance':      (0, 1500),   # W/m² – záporné žiarenie fyzikálne nemožné
+    'Pressure':        (870, 1085), # hPa – extrémy redukované na more
+    'BodyTemperature': (-40, 80),   # °C – operačný rozsah SMP10
+    'RelativeHumidity':(0, 100),    # % – fyzikálna definícia
+    'FanSpeed':        (0, 15000),  # RPM – typický DC motor
+    'SunZenith':       (0, 90),     # ° – záporný elevačný uhol neexistuje
+    # ... ďalšie parametre
+}
+</pre>
+Hodnoty pochádzajú z: (a) datasheetu meracích prístrojov (SMP10, CVF4), (b) fyzikálnych zákonov a histórickej štatistiky (extrémy tlaku), (c) geometrie merania (uhly).</div></div>
+
+<div class="qa"><div class="qa-q">Prečo ste použili fyzikálne medze a nie štatistické metódy detekcie outlierov (IQR, z-score)?</div>
+<div class="qa-a">Toto je kľúčová metodologická otázka. Tri dôvody prečo fyzikálne medze sú správna voľba:
+<ol>
+<li><strong>Bimodálne rozdelenie žiarenia</strong> — Irradiance má dva vrcholy: 0 W/m² (noc) a stovky W/m² (deň). Štatistické metódy (IQR, z-score) predpokladajú unimodálne/normálne rozdelenie. IQR by označil validné nočné hodnoty (0 W/m²) ako outliers.</li>
+<li><strong>Fyzikálna nezávislosť</strong> — hranice nie sú odvodené zo samotných dát (čo by ich robilo cirkulárnymi), ale z fyzikálnych zákonov a parametrov prístroja. Tlak 2000 hPa je fyzikálne nemožný bez ohľadu na to, čo hovorí distribúcia dát.</li>
+<li><strong>Interpretovateľnosť</strong> — každá zamietnutá vzorka má jasné fyzikálne zdôvodnenie, nie len "štatisticky odľahlá".</li>
+</ol>
+<div class="varovanie">Z-score: hodnota je outlier ak |( x − μ) / σ| &gt; 3. Pre žiarenie: μ=286.6, σ=282.0 → spodná hranica = 286.6 − 3×282 = −560 W/m². Teda z-score by NEODHALIL záporné žiarenie −0.63 W/m² ako problém.</div></div></div>
+
+<div class="qa"><div class="qa-q">Ako funguje detekcia — aký algoritmus?</div>
+<div class="qa-a">Pre každý parameter sa vytvorí boolovská maska mimo medze, potom sa všetky masky skombinujú cez OR:
+<pre>
+# Inicializácia: žiadna vzorka nie je poškodená
+poskodene_maska = pd.Series(False, index=df.index)
+
+for stlpec, (min_val, max_val) in FYZIKALNE_MEDZE.items():
+    # True kde hodnota je mimo [min_val, max_val] (a nie je NaN)
+    mimo = ((df[stlpec] &lt; min_val) | (df[stlpec] &gt; max_val)) &amp; df[stlpec].notna()
+    # OR: riadok je poškodený ak aspoň JEDEN parameter je mimo medze
+    poskodene_maska = poskodene_maska | mimo
+</pre>
+<strong>Prečo OR a nie AND?</strong> Ak je napríklad žiarenie záporné, celý riadok je nespoľahlivý — aj keby ostatné parametre boli v poriadku. Stačí jeden fyzikálne nereálny údaj na zamietnutie záznamu.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je "skupina za sebou idúcich chýb" a ako sa počíta?</div>
+<div class="qa-a">Skupina (run/group) je maximálna súvislá sekvencia True hodnôt v maske poškodených vzoriek. Algoritmus:
+<pre>
+skupiny = []
+dlzka = 0
+for hodnota in maska:   # prechádzame vzorku po vzorke
+    if hodnota:         # poškodená → rozširujeme skupinu
+        dlzka += 1
+    else:               # v poriadku → ak sme skončili skupinu
+        if dlzka &gt; 0:
+            skupiny.append(dlzka)  # uložíme dĺžku
+        dlzka = 0       # resetujeme
+if dlzka &gt; 0:
+    skupiny.append(dlzka)  # posledná skupina
+</pre>
+Výsledok: 151 skupín. Distribúcia: 137×1, 7×2, 3×3, 1×4, 1×5, 1×8, 1×12.</div></div>
+
+<div class="qa"><div class="qa-q">Čo znamená skupina s dĺžkou 12 — fyzikálne?</div>
+<div class="qa-a">12 vzoriek za sebou je poškodených. Pri vzorkovacej frekvencii ~70 vzoriek/deň ≈ ~6 vzoriek/hodinu, to zodpovedá výpadku ~2 hodiny. Môže ísť o:
+<ul>
+<li>Krátkodobý výpadok napájania alebo komunikácie senzora</li>
+<li>Zakrytie pyranometra (napr. vtákom alebo prístroj padol)</li>
+<li>Technickú poruchu jedného senzora počas 2 hodín</li>
+</ul>
+Dôležité: <strong>91 % skupín má dĺžku 1</strong> — sú to izolované, náhodné chyby, nie systémové zlyhanie.</div></div>
+
+<div class="qa"><div class="qa-q">Prečo histogram skupín používa half-integer hrany binov?</div>
+<div class="qa-a">Štandardné hrany binov (0, 1, 2, 3...) by spôsobili, že hodnota 1 by bola na hranici medzi bin [0,1) a [1,2). Half-integer hrany [0.5, 1.5, 2.5...] zaručia, že každá celá číselná hodnota leží presne v strede svojho binu:
+<pre>
+max_dlzka = min(max(skupiny), 30)
+bin_edges = [i + 0.5 for i in range(0, max_dlzka + 1)]
+# [0.5, 1.5, 2.5, 3.5, ...]
+# hodnota 1 → bin [0.5, 1.5) ✓
+# hodnota 2 → bin [1.5, 2.5) ✓
+</pre></div></div>
+
+<div class="pojmy"><span class="pojem">FYZIKALNE_MEDZE</span><span class="pojem">OR logika</span><span class="pojem">Bimodálne rozdelenie</span><span class="pojem">IQR</span><span class="pojem">Z-score</span><span class="pojem">Boolovská maska</span><span class="pojem">Run-length encoding</span><span class="pojem">Half-integer bins</span></div>
+</div></div>
+
+<!-- ===== SLAJD 8 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">8</div><div class="slide-nazov">Výsledok čistenia dát</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> 25 600 → 189 odstránených (0.74%) → 25 411 čistých → cleaned.csv.</div>
+
+<div class="sekcia-title">Čistenie — rozhodnutia a alternatívy</div>
+
+<div class="qa"><div class="qa-q">Prečo ste poškodené vzorky odstránili (listwise deletion) a nie imputovali?</div>
+<div class="qa-a">Tri dôvody pre odstránenie (deletion):
+<ol>
+<li><strong>Malý počet</strong> — 189 z 25 600 = 0.74%. Strata menej ako 1% dát je štatisticky zanedbateľná.</li>
+<li><strong>Fyzikálne neplatné hodnoty</strong> — hodnoty mimo fyzikálnych medzí nie sú "chýbajúce", sú <em>chybné</em>. Imputovať fyzikálne nereálnu hodnotu záporného žiarenia priemerom by zaviedlo skreslenie.</li>
+<li><strong>OR logika</strong> — ak je jeden parameter chybný, ostatné parametre toho istého záznamu môžu byť tiež ovplyvnené (napr. pri výpadku senzora). Celý riadok je nespoľahlivý.</li>
+</ol>
+<div class="poznamka">Imputácia (interpolácia, forward fill, priemer) by bola vhodná pre NaN hodnoty pri zachovaní časovej kontinuity. Tu ide o fyzikálne neplatné hodnoty, kde imputácia by zaviedla systematickú chybu.</div></div></div>
+
+<div class="qa"><div class="qa-q">Čo obsahuje cleaned.csv — sú tam aj pomocné stĺpce Date, Hour...?</div>
+<div class="qa-a">Nie. Funkcia <code>vycisti_a_uloz()</code> explicitne vylučuje pomocné stĺpce:
+<pre>
+pomocne_stlpce = ['Date', 'Hour', 'Month', 'DayOfYear']
+stlpce_csv = [s for s in df_clean.columns if s not in pomocne_stlpce]
+df_clean[stlpce_csv].to_csv(cesta_cleaned, index=False)
+</pre>
+Cleaned.csv obsahuje len pôvodné stĺpce z meteo_data_raw.csv (DateTime + 18 meraných parametrov), len s odfiltrovanými chybnými riadkami.</div></div>
+
+<div class="qa"><div class="qa-q">Je 0.74% prijateľná miera straty dát?</div>
+<div class="qa-a">Áno — v praxi sa za prijateľné považuje do 5%. Pri 0.74%:
+<ul>
+<li>Zostatok 25 411 vzoriek je štatisticky robustný</li>
+<li>Pokrytie roka zostáva na 97.8% (chýbajúce dni sú fixné, nie pridané čistením)</li>
+<li>Skupiny chýb sú krátke (max 12) a rozptýlené — nevznikajú dlhé medzery v časovom rade</li>
+</ul></div></div>
+
+<div class="pojmy"><span class="pojem">Listwise deletion</span><span class="pojem">Imputácia</span><span class="pojem">Forward fill</span><span class="pojem">Systematická chyba</span></div>
+</div></div>
+
+<!-- ===== SLAJD 9 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">9</div><div class="slide-nazov">Analýza žiarenia — ročný priebeh</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> Priemer 286.6 W/m², std 282.0, max 1440.6 W/m², sezónny vzor.</div>
+
+<div class="sekcia-title">Ročná analýza — metódy a interpretácia</div>
+
+<div class="qa"><div class="qa-q">Ako ste vypočítali ročný priebeh — aká metóda?</div>
+<div class="qa-a">Groupby podľa DayOfYear (deň v roku 1–366):
+<pre>
+stats = df.groupby('DayOfYear')['Irradiance'].agg(['mean', 'std']).reset_index()
+stats['Std'] = stats['Std'].fillna(0)   # deň s 1 vzorkou má std = NaN → 0
+</pre>
+Pre každý deň v roku zhromaždíme <em>všetky záznamy z toho istého dňa</em> (napr. všetky 15. júly zo všetkých rokov v datasete) a vypočítame priemer a std. Graf zobrazuje čiaru priemeru s pásom ±1σ.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je disperzia ±1σ a čo nám hovorí?</div>
+<div class="qa-a">σ (sigma) = štandardná odchýlka. Pás ±1σ okolo priemeru zobrazuje rozsah, v ktorom leží ~68% hodnôt (pri normálnom rozdelení). Tu to ukazuje variabilitu žiarenia v daný deň v roku:
+<ul>
+<li><strong>Úzky pás</strong> — malá variabilita, podobné dni medzi rokmi (stabilné počasie)</li>
+<li><strong>Široký pás</strong> — vysoká variabilita, premenlivé počasie (napr. jar/jeseň: raz jasno, raz zamračené)</li>
+</ul></div></div>
+
+<div class="qa"><div class="qa-q">Prečo je std žiarenia (282.0) skoro rovnaká ako priemer (286.6)?</div>
+<div class="qa-a">Irradiance má <strong>bimodálne rozdelenie</strong>:
+<ul>
+<li>V noci: 0 W/m² (slnko nezasvieti)</li>
+<li>Počas dňa: desiatky až stovky W/m² (v lete až 1440 W/m²)</li>
+</ul>
+Celkový priemer zahŕňa aj nočné nuly. Vysoká std je fyzikálne očakávaná — nie je to príznak problematických dát. Variačný koeficient (std/mean) ≈ 98% je typický pre takéto rozdelenie.
+<div class="poznamka">Keby sme analyzovali len denné hodiny (6:00–20:00), priemer aj std by boli výrazne vyššie a std/mean by bol nižší (~50–60%).</div></div></div>
+
+<div class="qa"><div class="qa-q">Aký fyzikálny dôvod má sezónna variácia žiarenia?</div>
+<div class="qa-a">Tri faktory:
+<ol>
+<li><strong>Dĺžka dňa</strong> — v lete na 47°N trvá deň ~16 hodín, v zime ~8 hodín. Viac hodín denného svetla = väčší denný integrál žiarenia.</li>
+<li><strong>Výška slnka</strong> — v lete je slnko vyšie na oblohe (SunZenith až 66.5°), prechádza kratšou vrstvou atmosféry → menej absorpcie → viac žiarenia na povrchu.</li>
+<li><strong>Oblačnosť</strong> — v strednej Európe je jar/jeseň typicky premenlivejšia, čo vysvetľuje širší pás disperzie v prechodných obdobiach.</li>
+</ol></div></div>
+
+<div class="sekcia-title">Interpretácia štatistík — percentily a rozdelenie</div>
+
+<div class="qa"><div class="qa-q">Prečo je 25. percentil žiarenia len 53 W/m² a 50. percentil 175.9 W/m² — teda medián tak nízky?</div>
+<div class="qa-a">Na prvý pohľad to vyzerá prekvapivo — pri maxime 1440 W/m² sa dalo čakať vyšší medián. Vysvetlenie je v štruktúre dát:
+<br><br>
+<strong>Noc tvorí ~50% všetkých záznamov.</strong> Vzorkovanie beží 24 hodín denne. Na 46.94° N trvá noc priemerne 14–16 hodín v zime a 8 hodín v lete. Celkový priemer noci = cca 12 hodín. Za rok: ~50% záznamov má Irradiance ≈ 0 W/m² (noc).
+<br><br>
+Distribúcia je bimodálna:
+<ul>
+<li>Veľký zhluk pri 0 W/m² — nočné záznamy</li>
+<li>Druhý zhluk pri 300–900 W/m² — denné záznamy</li>
+</ul>
+Percentily odrážajú túto štruktúru:
+<div style="background:#f8f9ff;border:1px solid #e0e3ff;border-radius:6px;padding:10px 14px;font-family:Consolas,monospace;font-size:9pt;margin:8px 0;">
+25% = 53 W/m²  → bod kde 25% záznamov je nižších; zahŕňa veľa nočných núl<br>
+50% = 175.9 W/m² → medián; práve na hranici noc/deň<br>
+75% = 466 W/m²  → horný kvartil; len denné hodiny s dobrým žiarením<br>
+max = 1440.6 W/m² → letný poludňajší peak
+</div>
+<div class="poznamka">Keby sme počítali percentily len pre denné hodiny (Irradiance > 0), percentily by boli výrazne vyššie. Celkové percentily sú "skreslené" nočnými nulami — čo je ale fyzikálne správne chovanie.</div></div></div>
+
+<div class="qa"><div class="qa-q">Čo nám hovorí std/mean ≈ 98% pre žiarenie? Je to normálne?</div>
+<div class="qa-a">Variačný koeficient (CV) = std/mean × 100% = 282.0/286.6 × 100% ≈ 98.4%.
+<br><br>
+Pre bežné unimodálne distribúcie (napr. výška ľudí, teplota) je CV typicky 5–20%. CV ≈ 98% by naznačoval extrémnu nekonzistentnosť dát.
+<br><br>
+Pre Irradiance je to <strong>fyzikálne normálne</strong>:
+<ul>
+<li>Distribúcia je silno bimodálna (dva skupiny — 0 a stovky W/m²)</li>
+<li>Veľká std je spôsobená veľkým rozsahom (0 až 1440 W/m²)</li>
+<li>Nízky priemer je spôsobený nočnými nulami, vysoká std odráža denný rozsah</li>
+</ul>
+CV je dobrý deskriptívny ukazovateľ, ale pre bimodálne rozdelenia stráca interpretačnú hodnotu — každý vrchol distribúcie by mal byť analyzovaný samostatne.</div></div>
+
+<div class="pojmy"><span class="pojem">groupby DayOfYear</span><span class="pojem">±1σ disperzia</span><span class="pojem">Bimodálne rozdelenie</span><span class="pojem">Variačný koeficient</span><span class="pojem">fill_between</span><span class="pojem">Percentil</span><span class="pojem">Medián vs priemer</span></div>
+</div></div>
+
+<!-- ===== SLAJD 10 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">10</div><div class="slide-nazov">Analýza žiarenia — mesačné denné profily</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> Mriežka 3×4 mesiacov, os X = hodina dňa, os Y = žiarenie, pás ±1σ.</div>
+
+<div class="sekcia-title">Mesačná analýza</div>
+
+<div class="qa"><div class="qa-q">Ako ste vypočítali mesačné hodinové profily?</div>
+<div class="qa-a">Dvojkroková filtrácia + groupby:
+<pre>
+for mesiac in range(1, 13):
+    data_m = df[df['Month'] == mesiac]   # vyfiltrujeme jeden mesiac
+    hodinove = data_m.groupby('Hour')['Irradiance'].agg(['mean', 'std'])
+    # pre každú hodinu (0–23): priemer a std zo VŠETKÝCH dní tohto mesiaca
+</pre>
+Každý bod v grafe = priemer žiarenia napr. v januári o 12:00 hodine, vypočítaný zo všetkých januárových záznamov o 12:00.</div></div>
+
+<div class="qa"><div class="qa-q">Prečo sú letné profily symetrické a zimné nie?</div>
+<div class="qa-a">Symetria letného profilu je spôsobená tým, že v lete je slnko v poludňajšej polohe (SunAzimuth≈180°) — dráha slnka je symetrická okolo juhu. Ráno stúpa na východe a poobede klesá na západe rovnako strmým oblúkom.
+<br><br>Zimné profily môžu byť mierne asymetrické kvôli vyššej oblačnosti ráno alebo poobede a lokálnym geografickým efektom (tiene hôr na horizonte v konkrétnych azimutech).</div></div>
+
+<div class="qa"><div class="qa-q">Prečo je na jar disperzia (pás ±1σ) veľmi široký?</div>
+<div class="qa-a">Jar (najmä apríl) je v strednej Európe typicky premenlivé obdobie — jeden deň jasno (500+ W/m²), druhý deň zamračené (0–50 W/m²). Groupby Hour zbiera tieto oba typy dní do jednej štatistiky → veľká std. Vysoká disperzia = premenlivé počasie, nie chyba merania.</div></div>
+
+<div class="pojmy"><span class="pojem">groupby Month + Hour</span><span class="pojem">Sezónna variabilita</span><span class="pojem">SunAzimuth symetria</span></div>
+</div></div>
+
+<!-- ===== SLAJD 11 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">11</div><div class="slide-nazov">Korelačná analýza — kľúčové výsledky</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> FanSpeed↔Pressure r=−0.998, teplotné snímače r≈+0.999, SunZenith r=+0.790, tlak↔teplota ≈−0.82. Heatmapa + 12 scatter párov.</div>
+
+<div class="sekcia-title">Pearsonova korelácia — matematika a výber parametrov</div>
+
+<div class="qa"><div class="qa-q">Čo je Pearsonov korelačný koeficient — vzorec a interpretácia?</div>
+<div class="qa-a">Pearsonov r meria silu a smer <strong>lineárnej závislosti</strong> dvoch premenných:
+<div class="formula">r(X, Y) = Cov(X, Y) / (σ_X · σ_Y) = Σ(xᵢ−x̄)(yᵢ−ȳ) / (‖x−x̄‖ · ‖y−ȳ‖)</div>
+<ul>
+<li><strong>r = +1</strong> — dokonalá kladná lineárna závislosť (y rastie keď x rastie)</li>
+<li><strong>r = −1</strong> — dokonalá záporná lineárna závislosť (y klesá keď x rastie)</li>
+<li><strong>r = 0</strong> — žiadna lineárna závislosť (môže existovať nelineárna!)</li>
+<li><strong>|r| &gt; 0.5</strong> — silná korelácia</li>
+<li><strong>|r| &gt; 0.3</strong> — stredná korelácia</li>
+</ul>
+V PyTorch implementácii:
+<pre>
+irr_c = irr - irr.mean()   # odchýlky od priemeru
+zen_c = zen - zen.mean()
+r = (irr_c * zen_c).sum() / (irr_c.norm() * zen_c.norm())
+# = skalárny súčin / súčin dĺžok vektorov = cosinus uhla medzi centrovanými vektormi
+</pre></div></div>
+
+<div class="qa"><div class="qa-q">Prečo Pearson a nie Spearman alebo Kendall?</div>
+<div class="qa-a">
+<ul>
+<li><strong>Pearson</strong> — meria lineárnu závislosť. Vhodný pre kontinuálne, kvantitatívne dáta kde predpokladáme lineárne vzťahy. Citlivý na extrémne hodnoty (outliers).</li>
+<li><strong>Spearman</strong> — meria monotónnu závislosť (poradie hodnôt). Robustnejší voči outlierom, vhodný pre ordinálne dáta alebo nelineárne monotónne vzťahy.</li>
+<li><strong>Kendall</strong> — podobný Spearmanovi, ale statisticky robustnejší pre malé vzorky.</li>
+</ul>
+Pre naše merania je Pearson správna voľba: fyzikálne vzťahy (žiarenie vs. výška slnka, teplota vs. tlak) sú prevažne lineárne alebo blízko lineárne, a dataset je veľký (25 600 vzoriek) čo minimalizuje dopad outlierov na priemer.</div></div>
+
+<div class="qa"><div class="qa-q">Ako ste vypočítali korelačnú maticu v pandas?</div>
+<div class="qa-a">
+<pre>
+kor_matica = df[PARAMETRE].corr(method='pearson')
+# Výsledok: DataFrame 16×16 kde kor_matica.loc['Irradiance','SunZenith']
+# = Pearsonov r medzi týmito dvoma stĺpcami
+# Diagonála = 1.0 (parameter koreluje sám so sebou dokonale)
+</pre>
+Pandas <code>.corr()</code> automaticky: (1) vylúči riadky kde aspoň jedna z dvoch hodnôt je NaN, (2) centruje a normalizuje každý stĺpec, (3) vypočíta skalárny súčin.</div></div>
+
+<div class="sekcia-title">Kľúčové korelácie — fyzikálne vysvetlenia</div>
+
+<div class="qa"><div class="qa-q">Prečo je FanSpeed↔Pressure r=−0.998 tak silná? Je to priama fyzikálna väzba?</div>
+<div class="qa-a"><strong>Nie je to priama väzba</strong> — ventilátor priamo netlak neovláda ani tlak ventilátor. Ide o nepriamu sezónnu závislosť cez <strong>spoločnú latentnú premennú — teplotu vzduchu</strong>:
+<br><br>
+<strong>V zime:</strong> nízka teplota → hustejší vzduch → vyšší atmosferický tlak. Hustejší vzduch kladie väčší odpor lopatám ventilátora → motor sa točí pomalšie (nižšie RPM).
+<br><br>
+<strong>V lete:</strong> vysoká teplota → redší vzduch → nižší tlak. Menej odporu → ventilátor sa točí rýchlejšie (vyššie RPM).
+<br><br>
+Oba parametre sú teda riadené tou istou sezónnou teplotou, ale v opačnom smere → korelujú navzájom negatívne s r blízkym −1.
+<div class="varovanie">Toto je príklad spurious (zdanlivej) korelácie — vysoká r ≠ priama kauzalita. V skutočnosti teplota vzduchu je confounder (mätúca premenná).</div></div></div>
+
+<div class="qa"><div class="qa-q">Prečo korelujú tri teplotné snímače navzájom s r≈+0.999?</div>
+<div class="qa-a">Tri fyzicky nezávislé snímače — na tele pyranometra (BodyTemperature), pri tlakomeri (PressureTemp) a pri vlhkomeri (HumidityTemp) — sú umiestnené blízko seba v rámci jedného meteorologického prístroja. Všetky merajú <em>tú istú okolnú teplotu vzduchu</em>.
+<br><br>Korelácia r≈+0.999 (nie presne 1.000) odráža:
+<ul>
+<li>Mierne lokálne zahrievanie — telo pyranometra (BodyTemp) sa ohrieva priamym žiarením viac ako snímač tlaku (PressureTemp)</li>
+<li>Kalibračné odchýlky medzi snímačmi</li>
+<li>Malé oneskorenie teplotnej odozvy rôznych senzorov</li>
+</ul>
+<div class="poznamka">Táto veľmi vysoká korelácia je cenný výsledok — potvrdzuje kalibračnú konzistenciu troch nezávislých snímačov teploty v zariadení.</div></div></div>
+
+<div class="qa"><div class="qa-q">Prečo je Irradiance↔SunZenith kladne korelovaná (r=+0.790) keď by sme čakali zápornú?</div>
+<div class="qa-a">V štandardnej astronómii:
+<ul>
+<li><strong>Zenitový uhol</strong> = uhol medzi slnkom a bodom presne nad hlavou (zenithom). 0° = slnko v nadhlavníku, 90° = slnko na horizonte. Vyšší zenitový uhol = nižšie slnko → menej žiarenia → <strong>záporná korelácia</strong>.</li>
+</ul>
+V tomto datasete SunZenith sa správa ako <strong>elevačný uhol</strong>:
+<ul>
+<li>Min = −0.26° (slnko tesne pod horizontom — úsvit/západ)</li>
+<li>Max = 66.5° (slnko blízko nadhlavníku — letné poludnie na 47° N)</li>
+</ul>
+Elevačný uhol = 90° − zenitový uhol. Vyšší elevačný uhol = slnko vyššie = kratšia dráha cez atmosféru = viac žiarenia → <strong>kladná korelácia r = +0.790</strong>.
+<div class="varovanie">Toto je zákerná pasca! Meno "SunZenith" naznačuje zenitový uhol (negatívna korelácia), ale dáta hovoria opak. Vždy treba preskúmať dáta, nie len spoliehať na názvy stĺpcov.</div></div></div>
+
+<div class="qa"><div class="qa-q">Prečo ste vybrali práve 12 scatter párov v 4 skupinách?</div>
+<div class="qa-a">Vybrali sme <strong>štyri trojuholníky</strong> — každá trojica parametrov {A, B, C} dáva tri páry {A-B, A-C, B-C}, ktoré spoločne vysvetlujú vzájomné vzťahy v skupiny:
+<ol>
+<li><strong>Sezónny efekt</strong> {Irradiance, Pressure, BodyTemp} — tri parametre korelujú cez ročné sezóny</li>
+<li><strong>Geometria Slnka</strong> {Irradiance, SunZenith, SunAzimuth} — poloha slnka určuje žiarenie</li>
+<li><strong>Mechanika senzora</strong> {Pressure, FanSpeed, PressureTemp} — FanSpeed extrémna závislosť</li>
+<li><strong>Konzistencia teplôt</strong> {BodyTemp, PressureTemp, HumidityTemp} — tri snímače teploty</li>
+</ol>
+Každá skupiny je "trojuholník" — vidíme nielen priamu závislosť A-B, ale aj ako A súvisí s C a B s C. Dáva to ucelený pohľad na každý fyzikálny mechanizmus.</div></div>
+
+<div class="qa"><div class="qa-q">Čo nám hovorí tvar scatter plotu — nie len hodnota r?</div>
+<div class="qa-a">
+<ul>
+<li><strong>Úzka, priama elipsa (lineárna)</strong> — priama lineárna závislosť, Pearson r je dobrá miera</li>
+<li><strong>Široká elipsa</strong> — slabá lineárna závislosť, veľká disperzia</li>
+<li><strong>Oblúk alebo krivka</strong> — nelineárna závislosť, Pearson r podhodnocuje skutočnú závislosť</li>
+<li><strong>Zhluk bodov (nula tvar)</strong> — žiadna závislosť, r ≈ 0</li>
+<li><strong>Dve oddelené skupiny</strong> — bimodálne dáta (ako naše žiarenie: noc vs. deň)</li>
+</ul>
+Vysoká transparentnosť (alpha=0.1) v scatter plotoch je zámerná — pri 25 000+ bodoch by plné body vytvorili čiernu masu. Transparentnosť odhalí hustotu zhlukov.</div></div>
+
+<div class="qa"><div class="qa-q">Čo je confounder (mätúca premenná) — príklad z projektu?</div>
+<div class="qa-a">Confounder je premenná, ktorá koreluje s oboma sledovanými premennými a spôsobuje zdanlivú koreláciu medzi nimi, hoci priama kauzálna väzba neexistuje.
+<br><br>Príklad: FanSpeed↔Pressure (r=−0.998).
+<ul>
+<li>FanSpeed koreluje s ročnou teplotou vzduchu (−: v zime pomalší)</li>
+<li>Pressure koreluje s ročnou teplotou vzduchu (+: v zime vyšší)</li>
+<li>→ FanSpeed a Pressure navzájom silne korelujú, hoci priamo nesúvisia</li>
+</ul>
+Confounder = ročná teplota vzduchu (nie je priamo meraná ako samostatný stĺpec).</div></div>
+
+<div class="pojmy"><span class="pojem">Pearsonov r</span><span class="pojem">Spearman</span><span class="pojem">Lineárna závislosť</span><span class="pojem">Confounder</span><span class="pojem">Sezónna korelácia</span><span class="pojem">Kalibračná konzistencia</span><span class="pojem">Elevačný uhol</span><span class="pojem">Trojuholník parametrov</span></div>
+</div></div>
+
+<!-- ===== SLAJD 12 ===== -->
+<div class="slide-blok">
+<div class="slide-hlavicka"><div class="slide-num">12</div><div class="slide-nazov">Záver — čo sme dosiahli</div></div>
+<div class="slide-telo">
+<div class="recap"><strong>Na slajde:</strong> 25 600 vzoriek, 0 NaN, 8 dní, 189 poškodených (0.74%), 25 411 clean, sezónny vzor, FanSpeed↔Pressure=−0.998, temp=0.999, SunZenith=+0.790.</div>
+
+<div class="sekcia-title">Záverečné otázky a kritické hodnotenie</div>
+
+<div class="qa"><div class="qa-q">Čo bolo najdôležitejšie zistenie projektu?</div>
+<div class="qa-a">Z pohľadu kvality dát: dataset je prekvapivo čistý — 0 NaN a len 0.74% poškodených vzoriek. To naznačuje vysoko kvalitné meranie s robustným zariadením.
+<br><br>Z pohľadu korelačnej analýzy: najzaujímavejší výsledok je FanSpeed↔Pressure r=−0.998 — extrémne silná závislosť, ktorá ale nie je priama fyzikálna väzba, ale nepriamy sezónny efekt cez hustotu vzduchu. Demonštruje dôležitosť fyzikálneho porozumenia pri interpretácii štatistík.</div></div>
+
+<div class="qa"><div class="qa-q">Čo by ste urobili inak alebo ako by ste projekt rozšírili?</div>
+<div class="qa-a">Možné rozšírenia:
+<ul>
+<li><strong>Analýza na cleaned.csv</strong> — zopakovať štatistiky a korelácie na vyčistených dátach pre porovnanie</li>
+<li><strong>Spearman korelácia</strong> — porovnanie s Pearsonom pre non-lineárne vzťahy</li>
+<li><strong>Časová analýza</strong> — autokorelačná funkcia (ACF) pre identifikáciu periodicity (24h, 365d)</li>
+<li><strong>Parciálna korelácia</strong> — odstrániť vplyv teploty a zobraziť "čistú" závislosť FanSpeed↔Pressure</li>
+<li><strong>Strojové učenie</strong> — predikcia Irradiance z ostatných parametrov (lineárna regresia, random forest)</li>
+</ul></div></div>
+
+<div class="qa"><div class="qa-q">Aké sú obmedzenia (limitations) analýzy?</div>
+<div class="qa-a">
+<ul>
+<li><strong>Jeden rok dát</strong> — výsledky reflektujú len rok 2018. Sezónne vzory môžu byť odlišné v iných rokoch (napr. neobvyklé leto).</li>
+<li><strong>Jedno miesto merania</strong> — výsledky platia pre Alpnach; iná nadmorská výška alebo klíma by dala iné korelácie.</li>
+<li><strong>Pearson predpokladá linearitu</strong> — niektoré závislosti (napr. Irradiance vs. SunZenith) môžu byť nelineárne, Pearson r ich podhodnocuje.</li>
+<li><strong>Fyzikálne medze sú konzervatívne</strong> — niektoré chyby môžu byť v povolenom rozsahu (napr. systematická drift senzora).</li>
+</ul></div></div>
+
+<div class="qa"><div class="qa-q">Ako by ste obhájili výber Pearsonovej korelácie namiesto Spearmanovej?</div>
+<div class="qa-a">Pre tento dataset je Pearson vhodný z nasledujúcich dôvodov:
+<ol>
+<li><strong>Veľká vzorka</strong> — 25 411 vzoriek. Pearson je pri veľkých vzorkách robustný voči miernemu porušeniu normality.</li>
+<li><strong>Prevažne lineárne vzťahy</strong> — meteorologické veličiny (teplota, tlak, žiarenie) majú fyzikálne zákonitosti ktoré sú aproximovane lineárne v bežných prevádzkových rozsahoch.</li>
+<li><strong>Kontinuálne dáta</strong> — všetky parametre sú numerické spojité veličiny, čo je predpoklad Pearsona.</li>
+</ol>
+Spearman by bol lepší keby: dáta obsahovali ordinálne hodnoty, závislosť bola monotónna ale nelineárna, alebo by sme mali veľa outlierov. Pre naše dáta by výsledky boli podobné.</div></div>
+
+<div class="qa"><div class="qa-q">Prečo je výstupom HTML report a nie napr. PDF alebo Excel?</div>
+<div class="qa-a">HTML má oproti iným formátom viaceré výhody:
+<ul>
+<li><strong>Self-contained</strong> — jeden súbor obsahuje text, tabuľky aj obrázky (base64). Nevyžaduje inštaláciu.</li>
+<li><strong>Interaktívny</strong> — navigácia, klikateľné linky, responzívny dizajn pre rôzne obrazovky.</li>
+<li><strong>Prenosný</strong> — otvorí sa v akomkoľvek prehliadači na akomkoľvek zariadení.</li>
+<li><strong>Dynamicky generovaný</strong> — kód v generuj_html.py spustí celú analýzu, zachytí výstup a zostaví report programmaticky. Zmena dát → nový report jedným príkazom.</li>
+</ul></div></div>
+
+<div class="pojmy"><span class="pojem">Confounder</span><span class="pojem">ACF</span><span class="pojem">Parciálna korelácia</span><span class="pojem">Limitations</span><span class="pojem">Self-contained HTML</span></div>
+</div></div>
+
+</body>
+</html>
