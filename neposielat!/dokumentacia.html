@@ -1,60 +1,139 @@
+<!-- Dokumentácia projektu MKR – popis metodológie, výsledkov a kódu vo formáte technickej správy. -->
+<!-- Štruktúra: titulná strana (.cover), anotácia, obsah (.toc), kapitoly h2/h3, záver, footer. -->
 <!DOCTYPE html>
+<!-- DOCTYPE html = HTML5 deklarácia; musí byť prvý riadok; bez nej prehliadač použije quirks mode -->
 <html lang="sk">
+<!-- lang="sk" = slovenský jazyk dokumentu; pomáha prehliadaču pri pravopise a čítačkám obrazovky -->
 <head>
+<!-- head = metadáta (kódovanie, titulek, CSS); nezobrazujú sa priamo v stránke -->
 <meta charset="UTF-8">
+<!-- charset="UTF-8" = kódovanie UTF-8; podporuje všetky slovenské znaky (á, é, í, ó, ú, ž, č, š...) -->
 <title>Dokumentácia – Štatistická analýza meteorologických dát</title>
+<!-- title = text záložky v prehliadači; nezobrazuje sa v tele stránky -->
 <style>
+/* style = CSS štýly; definujú vizuálny vzhľad všetkých tried a elementov v dokumente */
+
+/* === GLOBÁLNY RESET === */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* * = všetky elementy; border-box → padding/border sú zahrnuté v šírke, nie navyše */
+
+/* Telo dokumentu – biely podklad, maximálna šírka 860px, centrovanie, veľké odsadenie (ako vytlačená správa) */
 body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.75; color: #1a1a1a; background: #fff; max-width: 860px; margin: 0 auto; padding: 50px 60px; }
+/* max-width:860px + margin:0 auto = centrovaný stĺpec textu (typografia akademického dokumentu) */
+/* padding:50px 60px = veľké odsadenie (50px zhora/zdola, 60px vľavo/vpravo) imituje tlačenú správu */
+
+/* === TITULNÁ STRANA === */
 .cover { text-align: center; padding: 80px 0 60px; border-bottom: 3px solid #1a237e; margin-bottom: 50px; }
+/* .cover = titulná strana dokumentácie; veľký vrchný padding (80px) pre reprezentatívny vzhľad */
+/* border-bottom:3px solid #1a237e = tmavomodrá hrubá čiara oddeľujúca titulnú stranu od obsahu */
 .cover-pre { font-size: 10pt; color: #666; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+/* .cover-pre = malý sivý text nad názvom (napr. "Predmet: MKR | Semestrálny projekt") */
 .cover h1 { font-size: 26pt; color: #1a237e; font-weight: 700; margin-bottom: 16px; line-height: 1.3; }
+/* .cover h1 = veľký modrý titulok dokumentácie; 26pt = výrazná veľkosť pre titulnú stranu */
 .cover-sub { font-size: 12pt; color: #555; margin-bottom: 40px; }
+/* .cover-sub = podnadpis titulnej strany (napr. "Analýza dátovej sady meteo_data_raw.csv") */
 .cover-meta { font-size: 11pt; color: #666; line-height: 2.2; }
+/* .cover-meta = metadáta (vstupný súbor, výstupný adresár, dátum); riadkovanie 2.2 pre prehľadnosť */
 .cover-meta strong { color: #333; }
+/* strong v .cover-meta = tmavší text pre popisky ("Vstupný súbor:", "Dátum:") */
+
+/* === NADPISY DOKUMENTU === */
 h2 { font-size: 16pt; color: #1a237e; margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #c5cae9; }
+/* h2 = hlavné kapitoly dokumentu; modrá farba, veľká medzera navrchu (40px), podčiarknutie */
 h3 { font-size: 12pt; color: #3949ab; margin: 24px 0 8px; }
+/* h3 = podkapitoly; stredná modrá #3949ab, menšia medzera (24px) */
+
+/* === ZÁKLADNÉ ELEMENTY TEXTU === */
 p { margin-bottom: 10px; text-align: justify; }
+/* p = odstavec; text-align:justify = zarovnanie na oboch stranách (štýl tlačenej správy) */
 ul, ol { margin: 8px 0 14px 24px; }
+/* ul/ol = zoznamy; odsadené 24px od ľavého okraja */
 li { margin-bottom: 5px; }
+
+/* === OBSAH (TABLE OF CONTENTS) === */
 .toc { background: #f8f9ff; border: 1px solid #c5cae9; border-radius: 8px; padding: 24px 32px; margin: 20px 0 50px; }
+/* .toc = box s obsahom dokumentácie; svetlomodrý podklad, orámovanie, zaoblené rohy */
 .toc h2 { border: none; margin: 0 0 16px; font-size: 14pt; }
+/* h2 v .toc = nadpis "Obsah" bez spodného orámika (potlačí štýl globálneho h2) */
 .toc ol { list-style: decimal; margin-left: 20px; }
+/* ol v .toc = číslovaný zoznam kapitol dokumentácie */
 .toc li { margin-bottom: 6px; }
 .toc a { color: #3949ab; text-decoration: none; }
+/* odkaz v obsahu = bez podčiarknutia v pokojovom stave */
 .toc a:hover { text-decoration: underline; }
+/* :hover = podčiarknutie odkazu keď naň ukáže myš */
 .toc .sub { margin: 4px 0 4px 24px; font-size: 10pt; color: #555; list-style: disc; }
+/* .sub = podkapitoly v obsahu; menší font, odrážky (disc), ďalej odsadené */
+
+/* === FAREBNÉ INFORMAČNÉ BOXY === */
 .result-box { background: #e8eaf6; border-left: 5px solid #3949ab; padding: 14px 18px; margin: 16px 0; border-radius: 0 8px 8px 0; }
+/* .result-box = modrý box pre výsledky analýzy; ľavá modrá čiara 5px, zaoblené pravé rohy */
 .result-box strong { color: #1a237e; }
 .warning-box { background: #fff8e1; border-left: 5px solid #fbc02d; padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0; font-size: 10.5pt; }
+/* .warning-box = žltý box pre varovania a poznámky; žltá ľavá čiara */
 .success-box { background: #e8f5e9; border-left: 5px solid #388e3c; padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0; }
-.metrics { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0; }
-.metric { background: #f0f4ff; border: 1px solid #c5cae9; border-radius: 8px; padding: 12px 18px; min-width: 130px; flex: 1; text-align: center; }
-.metric-label { font-size: 9pt; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.metric-value { font-size: 18pt; font-weight: 700; color: #1a237e; line-height: 1.2; }
-.metric-unit { font-size: 9pt; color: #888; margin-top: 2px; }
-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 10pt; }
-th { background: #3949ab; color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
-td { padding: 8px 14px; border-bottom: 1px solid #e8eaf6; }
-tr:nth-child(even) td { background: #f8f9ff; }
-code { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 2px 6px; font-family: 'Consolas', 'Courier New', monospace; font-size: 9.5pt; }
-pre { background: #f8f9ff; border: 1px solid #e0e3ff; border-radius: 8px; padding: 14px 18px; font-family: 'Consolas', 'Courier New', monospace; font-size: 9.5pt; overflow-x: auto; margin: 12px 0 18px; line-height: 1.5; }
-footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid #e8eaf6; color: #999; font-size: 9pt; text-align: center; }
-@media print { body { padding: 20mm 20mm; font-size: 10pt; } .cover { page-break-after: always; } .toc { page-break-after: always; } }
-</style>
-</head>
-<body>
+/* .success-box = zelený box pre úspešné výsledky alebo potvrdenia */
 
+/* === METRIKY (štatistické hodnoty) === */
+.metrics { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0; }
+/* .metrics = flexbox obal pre metriky; flex-wrap:wrap = viac metrík sa zalamuje na nový riadok */
+.metric { background: #f0f4ff; border: 1px solid #c5cae9; border-radius: 8px; padding: 12px 18px; min-width: 130px; flex: 1; text-align: center; }
+/* .metric = jedna metrika; flex:1 = rovnomerne zdieľajú dostupnú šírku */
+.metric-label { font-size: 9pt; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+/* .metric-label = malý sivý popis metriky (VERZÁLKY) */
+.metric-value { font-size: 18pt; font-weight: 700; color: #1a237e; line-height: 1.2; }
+/* .metric-value = veľká tmavomodrá hodnota metriky (napr. "25 600") */
+.metric-unit { font-size: 9pt; color: #888; margin-top: 2px; }
+/* .metric-unit = malá sivá jednotka pod hodnotou (napr. "vzoriek") */
+
+/* === TABUĽKY === */
+table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 10pt; }
+/* tabuľka na celú šírku; border-collapse:collapse = bez medzier medzi bunkami */
+th { background: #3949ab; color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
+/* th = záhlaví tabuľky; modrý podklad #3949ab, biely tučný text */
+td { padding: 8px 14px; border-bottom: 1px solid #e8eaf6; }
+/* td = bunka tabuľky; jemná spodná čiara oddeľujúca riadky */
+tr:nth-child(even) td { background: #f8f9ff; }
+/* strihovanie riadkov: každý párny riadok má svetlomodrý podklad */
+
+/* === KÓD === */
+code { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 2px 6px; font-family: 'Consolas', 'Courier New', monospace; font-size: 9.5pt; }
+/* code = inline kód (monospace, šedý podklad, orámovanie) */
+pre { background: #f8f9ff; border: 1px solid #e0e3ff; border-radius: 8px; padding: 14px 18px; font-family: 'Consolas', 'Courier New', monospace; font-size: 9.5pt; overflow-x: auto; margin: 12px 0 18px; line-height: 1.5; }
+/* pre = blok kódu (viacriadkový); overflow-x:auto = horizontálny scroll ak je kód príliš dlhý */
+
+/* === PÄTICA DOKUMENTU === */
+footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid #e8eaf6; color: #999; font-size: 9pt; text-align: center; }
+/* footer = pätica na konci dokumentácie; oddelená čiarou, sivý malý text */
+
+/* Tlač – úprava pre PDF/CTRL+P */
+@media print { body { padding: 20mm 20mm; font-size: 10pt; } .cover { page-break-after: always; } .toc { page-break-after: always; } }
+/* @media print = aktívne len pri tlači; titulná strana a obsah sa zalomia na samostatnú stranu */
+
+</style>
+<!-- /style = koniec CSS bloku -->
+</head>
+<!-- /head = koniec metadát; nasleduje viditeľný obsah stránky -->
+<body>
+<!-- body = viditeľný obsah dokumentácie; začína titulnou stranou (.cover) -->
+
+<!-- TITULNÁ STRANA – centrovaný reprezentatívny úvod dokumentu -->
 <div class="cover">
+  <!-- .cover-pre = malý text nad názvom (predmet a typ dokumentu) -->
   <div class="cover-pre">Predmet: MKR &nbsp;|&nbsp; Semestrálny projekt</div>
+  <!-- h1 = hlavný názov dokumentácie (veľký tmavomodrý text) -->
   <h1>Štatistická analýza<br>meteorologických dát</h1>
+  <!-- <br> = zalomenie riadku vnútri nadpisu (násilné zalomenie bez nového odseku) -->
+  <!-- .cover-sub = stručný popis čoho sa dokumentácia týka -->
   <div class="cover-sub">Analýza dátovej sady meteo_data_raw.csv</div>
+  <!-- .cover-meta = technické metadáta (vstup, výstup, dátum) -->
   <div class="cover-meta">
     <strong>Vstupný súbor:</strong> meteo_data/train/meteo_data_raw.csv<br>
     <strong>Výstupný adresár:</strong> output_analyza_train_raw/<br>
     <strong>Dátum:</strong> Máj 2026
   </div>
 </div>
+<!-- /cover = koniec titulnej strany -->
 
 <div style="background:#f0f4ff; border:1px solid #c5cae9; border-radius:8px; padding:22px 28px; margin:0 0 40px; border-left:5px solid #3949ab;">
   <h2 style="font-size:13pt; color:#1a237e; margin:0 0 12px; border:none; padding:0;">Anotácia</h2>

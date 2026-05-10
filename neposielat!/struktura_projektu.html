@@ -1,123 +1,221 @@
-﻿<!DOCTYPE html>
+﻿<!-- Study guide pre projekt MKR – interaktívna stránka so záložkovým (tabbed) panelom. -->
+<!-- Obsahuje: Pipeline, Metódy, Moduly, Parametre, Q&A, Výsledky, Štatistické metódy, Pasce. -->
+<!-- JavaScript funkcie show(), tog(), qa() ovládajú prepínanie záložiek a rozbaľovanie sekcií. -->
+<!DOCTYPE html>
+<!-- DOCTYPE html = HTML5 deklarácia; musí byť absolútne prvý riadok súboru -->
 <html lang="sk">
+<!-- lang="sk" = slovenský jazyk; pomáha prehliadaču a čítačkám obrazovky -->
 <head>
+<!-- head = metadáta (kódovanie, viewport, titulek, CSS); nezobrazujú sa priamo -->
 <meta charset="UTF-8">
+<!-- charset="UTF-8" = kódovanie UTF-8; podporuje slovenské znaky (á, é, ž, č...) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- viewport meta = správne zobrazenie na mobilných zariadeniach; initial-scale=1.0 = žiadny zoom -->
 <title>Štruktúra projektu: MKR Meteorologické dáta</title>
+<!-- title = text záložky prehliadača; nezobrazuje sa v tele stránky -->
 <style>
-  :root {
-    --bg: #0f1117; --surface: #1a1d2e; --card: #222639; --border: #2e3250;
-    --a1: #6c8fff; --a2: #ff6b9d; --a3: #4fd1c5; --a4: #f6ad55; --a5: #68d391; --a6: #b794f4;
-    --text: #e2e8f0; --muted: #8892b0;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; padding: 1.5rem; }
+/* style = CSS štýly; táto stránka používa TMAVÝ DIZAJN s CSS premennými (CSS Custom Properties) */
 
+  /* === CSS PREMENNÉ (Custom Properties) === */
+  /* :root = pseudotrieda pre koreňový element (html); premenné sú globálne dostupné cez var(--názov) */
+  :root {
+    --bg: #0f1117;      /* tmavé pozadie celej stránky (takmer čierna) */
+    --surface: #1a1d2e; /* o niečo svetlejšie pozadie pre vnorené plochy */
+    --card: #222639;    /* tmavá karta (card), ešte svetlejšia vrstva */
+    --border: #2e3250;  /* farba orámikov medzi prvkami */
+    --a1: #6c8fff;      /* akcentová farba 1 – modrá (Pipeline, primárna) */
+    --a2: #ff6b9d;      /* akcentová farba 2 – ružová (Pasce, varovania) */
+    --a3: #4fd1c5;      /* akcentová farba 3 – tyrkysová (Metódy, formuly) */
+    --a4: #f6ad55;      /* akcentová farba 4 – oranžová (Moduly, čísla) */
+    --a5: #68d391;      /* akcentová farba 5 – zelená (Parametre, rozsahy) */
+    --a6: #b794f4;      /* akcentová farba 6 – fialová (Výsledky, grafy) */
+    --text: #e2e8f0;    /* základná farba textu (svetlošedá – čitateľná na tmavom pozadí) */
+    --muted: #8892b0;   /* tlmená farba textu pre vedľajší obsah (popisky, metadáta) */
+  }
+
+  /* === GLOBÁLNY RESET === */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* box-sizing:border-box → padding/border sú zahrnuté v šírke, nie navyše */
+
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; padding: 1.5rem; }
+  /* body = tmavé pozadie (var(--bg)=#0f1117), svetlý text (var(--text)=#e2e8f0), riadkovanie 1.65 */
+
+  /* === NADPISY === */
   h1 { text-align: center; font-size: 1.9rem; margin-bottom: .3rem;
     background: linear-gradient(135deg, var(--a1), var(--a3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  /* h1 = gradient text (modrá→tyrkysová); -webkit-background-clip:text = clip gradient na text */
+  /* -webkit-text-fill-color:transparent = skryje pôvodnú farbu textu, ukazuje podkladový gradient */
   .subtitle { text-align: center; color: var(--muted); margin-bottom: 2rem; font-size: .9rem; }
+  /* .subtitle = malý sivý podnadpis pod h1 */
 
-  /* TABS */
+  /* === ZÁLOŽKOVÝ PANEL (Tabs) === */
+  /* .tabs = flexbox riadok so záložkami pre navigáciu medzi sekciami stránky */
   .tabs { display: flex; gap: .4rem; margin-bottom: 1.8rem; flex-wrap: wrap; justify-content: center; }
+  /* .tab = jedna záložka (pill-shaped button); cursor:pointer → kurzor sa zmení na ruku */
   .tab { padding: .45rem 1.2rem; border-radius: 2rem; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font-size: .85rem; transition: all .2s; }
+  /* transition:all .2s = plynulý 0.2s prechod pri hover/active (zmena farby) */
   .tab.active, .tab:hover { background: var(--a1); color: #fff; border-color: var(--a1); }
+  /* .tab.active a .tab:hover = aktívna/hovered záložka sa sfarbí na modrú (var(--a1)) */
   .panel { display: none; } .panel.active { display: block; }
+  /* .panel = panel obsahu záložky; predvolene skrytý (display:none) */
+  /* .panel.active = aktívny panel zobrazí sa (display:block); prepína sa cez show() JavaScript funkciu */
 
-  /* CARDS */
+  /* === KARTY (Cards) === */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1rem; }
+  /* .card = tmavá karta s orámovaním; používa tmavú farebnú vrstvu var(--card) */
   .card:hover { border-color: #4a5568; }
+  /* hover efekt na karte – orámovanie sa zosvetlí */
   .card-title { font-weight: 700; font-size: 1rem; margin-bottom: .5rem; }
+  /* .card-title = tučný nadpis karty */
   .card-sub { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .8rem; }
+  /* .card-sub = malý tlmený podnadpis karty (VERZÁLKY) */
 
-  /* METHOD CARDS */
+  /* === KARTY METÓD (s farebnou ľavou čiarou) === */
+  /* .method = karta technickej metódy; ľavá farebná čiara 4px identifikuje kategóriu */
   .method { background: var(--card); border-left: 4px solid var(--a3); border-radius: 0 12px 12px 0; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
-  .method.orange { border-left-color: var(--a4); }
-  .method.purple { border-left-color: var(--a6); }
-  .method.red    { border-left-color: var(--a2); }
-  .method.green  { border-left-color: var(--a5); }
-  .method.blue   { border-left-color: var(--a1); }
+  .method.orange { border-left-color: var(--a4); } /* oranžová čiara pre kategóriu Moduly */
+  .method.purple { border-left-color: var(--a6); } /* fialová čiara pre kategóriu Výsledky */
+  .method.red    { border-left-color: var(--a2); } /* ružová čiara pre varovania/pasce */
+  .method.green  { border-left-color: var(--a5); } /* zelená čiara pre parametre/rozsahy */
+  .method.blue   { border-left-color: var(--a1); } /* modrá čiara pre pipeline kroky */
   .method-title { font-weight: 700; font-size: 1rem; margin-bottom: .25rem; }
   .method-where { font-size: .78rem; color: var(--muted); font-family: monospace; margin-bottom: .7rem; }
+  /* .method-where = malý monospace text s cestou k súboru kde sa metóda nachádza */
   .method-body { font-size: .88rem; color: #cdd5e0; }
   .method-body p { margin-bottom: .5rem; }
   .method-body p:last-child { margin-bottom: 0; }
   .method-body ul { margin: .4rem 0 .4rem 1.2rem; }
   .method-body li { margin-bottom: .3rem; }
   .formula { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: .5rem 1rem; font-family: monospace; font-size: .85rem; color: var(--a3); margin: .5rem 0; display: inline-block; }
+  /* .formula = inline matematický vzorec; tyrkysová farba var(--a3), monospace font */
   .formula.block { display: block; }
+  /* .formula.block = blokový vzorec (zaberá celý riadok) */
 
-  /* CODE SNIPPETS */
+  /* === BLOKY KÓDU === */
   pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .9rem 1rem; font-size: .8rem; overflow-x: auto; margin: .6rem 0; line-height: 1.5; }
+  /* pre = blok zdrojového kódu; overflow-x:auto = horizontálny scroll ak je kód dlhý */
   code { font-family: 'Cascadia Code', 'Fira Code', monospace; }
-  .kw { color: #c792ea; } .fn { color: #82aaff; } .st { color: #c3e88d; }
-  .cm { color: #546e7a; font-style: italic; } .num { color: #f78c6c; }
-  .key { color: #ffcb6b; } .op { color: #89ddff; }
+  /* code = monospace font pre inline kód; Cascadia Code/Fira Code sú programátorské fonty */
 
-  /* Q&A */
+  /* === ZVÝRAZNENIE SYNTAXE KÓDU (syntax highlighting triedy) === */
+  .kw { color: #c792ea; }   /* .kw = keyword (kľúčové slovo: def, class, for, if...) */
+  .fn { color: #82aaff; }   /* .fn = function name (názov funkcie) */
+  .st { color: #c3e88d; }   /* .st = string (reťazec v úvodzovkách) */
+  .cm { color: #546e7a; font-style: italic; } /* .cm = comment (komentár kódu) */
+  .num { color: #f78c6c; }  /* .num = number (číselná hodnota) */
+  .key { color: #ffcb6b; }  /* .key = dictionary key (kľúč slovníka v Pythone) */
+  .op { color: #89ddff; }   /* .op = operator (operátor: =, +, -, >=, ...) */
+
+  /* === Q&A INTERAKTÍVNE SEKCIE (rozklikávacie otázky a odpovede) === */
   .qa { margin-bottom: .8rem; }
+  /* .question = rozklikávateľná otázka; cursor:pointer → ukazuje kliknuteľnosť */
   .question { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1.1rem; cursor: pointer; font-weight: 600; font-size: .9rem; display: flex; justify-content: space-between; align-items: center; transition: border-color .2s; }
   .question:hover { border-color: var(--a1); }
+  /* .question.open = keď je otázka rozbalená; zaoblené iba horné rohy (dolné nadväzujú na odpoveď) */
   .question.open { border-color: var(--a1); border-radius: 10px 10px 0 0; background: #1e2540; }
+  /* .answer = skrytá odpoveď; zobrazí sa keď .question dostane triedu .open (cez qa() JS funkciu) */
   .answer { display: none; background: var(--card); border: 1px solid var(--a1); border-top: none; border-radius: 0 0 10px 10px; padding: 1rem 1.2rem; font-size: .87rem; color: #cdd5e0; line-height: 1.7; }
+  /* border-top:none = spájanie s .question.open bez medzery */
   .answer.open { display: block; }
+  /* .answer.open = trieda pridaná JS funkciou qa() keď klikneme na otázku */
   .answer ul { margin: .4rem 0 .4rem 1.3rem; }
   .answer li { margin-bottom: .3rem; }
   .answer p { margin-bottom: .5rem; }
   .answer p:last-child { margin-bottom: 0; }
   .chevron { font-size: .7rem; transition: transform .2s; }
+  /* .chevron = šípka (▼) na pravej strane otázky; otočí sa o 180° keď je odpoveď otvorená */
   .question.open .chevron { transform: rotate(180deg); }
+  /* rotate(180deg) = otočenie šípky pri otvorení odpovede */
   .qa-section { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1.5rem 0 .6rem; }
+  /* .qa-section = nadpis skupiny Q&A otázok (malé VERZÁLKY) */
 
-  /* PIPELINE */
+  /* === PIPELINE (kroky spracovania dát – klikateľné rozklikávacie karty) === */
   .pipeline { max-width: 860px; margin: 0 auto; }
+  /* .pipeline = centrovaný kontajner pre kroky pipeline; maximálna šírka 860px */
   .stage { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.3rem; cursor: pointer; transition: border-color .2s; }
+  /* .stage = jedna karta kroku pipeline; cursor:pointer = kliknuteľná; ovládaná tog() JS funkciou */
   .stage:hover { border-color: var(--a1); }
   .stage-hdr { display: flex; align-items: center; gap: .9rem; }
+  /* .stage-hdr = hlavička kroku pipeline (číslo + názov + súbor); flexbox */
   .stage-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
+  /* .stage-num = kruhový farebný badge s číslom kroku; farba závisí od .s1-.s6 tried */
   .stage-title { font-weight: 600; }
   .stage-file { margin-left: auto; font-family: monospace; font-size: .78rem; background: var(--surface); padding: .2rem .6rem; border-radius: .3rem; color: var(--muted); white-space: nowrap; }
+  /* .stage-file = monospace badge s názvom súboru (napr. "main.py"); margin-left:auto = na pravom okraji */
   .stage-body { display: none; margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); font-size: .87rem; color: #cdd5e0; }
+  /* .stage-body = detail kroku pipeline; predvolene skrytý (display:none); zobrazí ho tog() JS funkcia */
   .stage-body.open { display: block; }
   .stage-body p { margin-bottom: .4rem; }
   .arrow { text-align: center; color: #4a5568; font-size: 1.3rem; padding: .25rem 0; }
-  .s1 .stage-num { background: var(--a1); color: #fff; }
-  .s2 .stage-num { background: var(--a6); color: #fff; }
-  .s3 .stage-num { background: var(--a3); color: #1a1d2e; }
-  .s4 .stage-num { background: var(--a4); color: #1a1d2e; }
-  .s5 .stage-num { background: var(--a5); color: #1a1d2e; }
-  .s6 .stage-num { background: var(--a2); color: #fff; }
+  /* .arrow = šípka (→ alebo ↓) medzi krokmi pipeline ukazujúca smer toku dát */
+
+  /* Farebné kruhy čísel pre kroky pipeline (.s1 až .s6 = step 1 až step 6) */
+  .s1 .stage-num { background: var(--a1); color: #fff; }   /* s1 = modrá (načítanie) */
+  .s2 .stage-num { background: var(--a6); color: #fff; }   /* s2 = fialová (štatistiky) */
+  .s3 .stage-num { background: var(--a3); color: #1a1d2e; } /* s3 = tyrkysová (čistenie) */
+  .s4 .stage-num { background: var(--a4); color: #1a1d2e; } /* s4 = oranžová (žiarenie) */
+  .s5 .stage-num { background: var(--a5); color: #1a1d2e; } /* s5 = zelená (korelácie) */
+  .s6 .stage-num { background: var(--a2); color: #fff; }   /* s6 = ružová (HTML report) */
+
+  /* === TAGY (malé farebné badges pre kategorizáciu) === */
   .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .6rem; }
   .tag { font-size: .75rem; padding: .15rem .55rem; border-radius: .3rem; font-family: monospace; }
-  .tg { background: #1a4731; color: #68d391; } .tp { background: #2d1b4e; color: #b794f4; } .th { background: #3d2b0a; color: #f6ad55; }
+  /* .tag = malý monospace badge s farbou podľa kategórie */
+  .tg { background: #1a4731; color: #68d391; } /* .tg = zelený tag (správne/vyčistené) */
+  .tp { background: #2d1b4e; color: #b794f4; } /* .tp = fialový tag (knižnica/modul) */
+  .th { background: #3d2b0a; color: #f6ad55; } /* .th = oranžový tag (upozornenie) */
 
-  /* PARAMS TABLE */
+  /* === TABUĽKA PARAMETROV === */
   table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  /* border-collapse:collapse = bez medzier medzi bunkami tabuľky */
   th { text-align: left; padding: .5rem .8rem; background: var(--surface); color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+  /* th = záhlaví tabuľky; tmavý podklad, tlmená farba, VERZÁLKY */
   td { padding: .48rem .8rem; border-top: 1px solid var(--border); }
   td:first-child { font-family: monospace; color: var(--a3); }
+  /* td:first-child = prvý stĺpec (názov parametra) zobrazený v tyrkysovej monospace */
   tr:hover td { background: var(--surface); }
-  .unit { color: var(--muted); font-size: .8rem; } .range { font-family: monospace; color: var(--a5); font-size: .82rem; }
+  /* hover efekt na riadku tabuľky – mierne zosvetlenie pozadia */
+  .unit { color: var(--muted); font-size: .8rem; }
+  /* .unit = sivé jednotky (napr. "[W/m²]") */
+  .range { font-family: monospace; color: var(--a5); font-size: .82rem; }
+  /* .range = zelená monospace hodnota fyzikálnych medzí (napr. "0 – 1500") */
   .tbl-section { font-weight: 700; color: var(--a4); padding: 1rem .8rem .3rem; font-size: .85rem; }
+  /* .tbl-section = oranžový nadpis skupiny riadkov v tabuľke (napr. "Žiarenie", "Teplota") */
 
-  /* GRID HELPERS */
+  /* === POMOCNÉ TRIEDY PRE LAYOUT === */
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  /* .grid2 = CSS grid s dvomi rovnako širokými stĺpcami; 1fr = každý stĺpec zaberá rovnako */
   @media(max-width:700px) { .grid2 { grid-template-columns: 1fr; } }
+  /* @media(max-width:700px) = na mobiloch (šírka ≤700px) sa grid zmení na 1 stĺpec */
   .max900 { max-width: 900px; margin: 0 auto; }
+  /* .max900 = centrovaný kontajner s maximálnou šírkou 900px */
   .tip { text-align: center; color: var(--muted); font-size: .8rem; margin-bottom: 1.2rem; }
+  /* .tip = malý sivý tip text (napr. "Klikni na krok pre detail") */
 
-  /* highlight badge */
+  /* === HIGHLIGHT BADGES === */
   .badge { display: inline-block; font-size: .72rem; padding: .1rem .5rem; border-radius: .3rem; font-weight: 600; margin-left: .5rem; vertical-align: middle; }
+  /* .badge = malý farebný inline badge (napr. "NOVÉ", "POZOR") */
   .bdg-y { background: #3d3000; color: var(--a4); }
+  /* .bdg-y = žltý/oranžový badge (var(--a4)) na tmavom pozadí */
   .bdg-r { background: #3d1020; color: var(--a2); }
-</style>
-</head>
-<body>
+  /* .bdg-r = červený/ružový badge (var(--a2)) na tmavom pozadí */
 
+</style>
+<!-- /style = koniec CSS bloku -->
+</head>
+<!-- /head = koniec metadát -->
+<body>
+<!-- body = viditeľný obsah stránky; tmavé pozadie, záložkový panel so sekciami -->
+
+<!-- Hlavný nadpis s gradientom (tyrkysová→modrá cez CSS background-clip:text) -->
 <h1>MKR — Meteorologické dáta</h1>
+<!-- .subtitle = malý sivý podnadpis pod h1 -->
 <p class="subtitle">Study guide &nbsp;·&nbsp; Metódy, kód, Q&A</p>
 
-<!-- HLAVA -->
+<!-- HLAVA – informačný box so súhrnom projektu (inline štýly kvôli flexibilite layoutu) -->
+<!-- CSS grid repeat(3,1fr) = 3 rovnako široké stĺpce pre 6 kategórií stránky -->
 <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.8rem;margin-bottom:1.8rem;max-width:900px;margin-left:auto;margin-right:auto;margin-bottom:1.8rem">
+  <!-- Flexbox riadok s ikonou počasia a popisom stanice -->
   <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.8rem">
     <span style="font-size:2rem">🌤️</span>
     <div>
@@ -125,9 +223,11 @@
       <div style="font-size:.82rem;color:var(--muted)">46.94°N, 8.28°E &nbsp;·&nbsp; Dataset: 2018-01-01 – 2018-12-31 &nbsp;·&nbsp; 25 600 vzoriek &nbsp;·&nbsp; 20-minútový interval &nbsp;·&nbsp; 19 stĺpcov</div>
     </div>
   </div>
+  <!-- Stručný popis stanice a cieľa projektu -->
   <div style="font-size:.87rem;color:#cdd5e0;margin-bottom:.9rem">
     Stanica meria slnečné žiarenie (GHI) pyranometrom <strong>Kipp &amp; Zonen SMP10</strong> s ventilačnou/vykurovacou jednotkou <strong>CVF4</strong>. Každé meranie je zároveň spojené s fotografiou oblohy (<code>PictureName</code>). Cieľom spracovania dát je pripraviť čistý dataset pre prediktívne ML modely.
   </div>
+  <!-- Grid 3×2 = 6 buniek s prehľadom sekcií stránky (farebne rozlíšené podľa --a1 až --a6) -->
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;font-size:.82rem">
     <div style="background:var(--surface);border-radius:8px;padding:.6rem .9rem"><span style="color:var(--a1);font-weight:700">1. Pipeline</span><br><span style="color:var(--muted)">Tok spracovania krok po kroku</span></div>
     <div style="background:var(--surface);border-radius:8px;padding:.6rem .9rem"><span style="color:var(--a3);font-weight:700">2. Metódy</span><br><span style="color:var(--muted)">Každá technika vysvetlená do hĺbky</span></div>
@@ -137,15 +237,22 @@
     <div style="background:var(--surface);border-radius:8px;padding:.6rem .9rem"><span style="color:var(--a6);font-weight:700">6. Výsledky</span><br><span style="color:var(--muted)">Grafy + čo znamenajú</span></div>
   </div>
 </div>
+<!-- /hlava sekcia -->
 
+<!-- ZÁLOŽKY – každá záložka pri kliknutí zavolá show('id') JS funkciu -->
+<!-- onclick="show('pipeline')" = kliknutie zavolá show() s názvom panelu ktorý sa má zobraziť -->
 <div class="tabs">
+  <!-- Prvá záložka má triedu "active" = predvolene viditeľný panel -->
   <div class="tab active" onclick="show('pipeline')">Pipeline</div>
   <div class="tab" onclick="show('metody')">Metódy spracovania dát</div>
   <div class="tab" onclick="show('moduly')">Moduly a kód</div>
   <div class="tab" onclick="show('params')">Parametre a medze</div>
   <div class="tab" onclick="show('qna')">Q&amp;A — Ťažké otázky</div>
+  <!-- &amp; = HTML entita pre & (ampersand); priame & by porušilo HTML syntax -->
   <div class="tab" onclick="show('vysledky')">Výsledky a interpretácia</div>
+  <!-- &#352; = Š, &#233; = é, &#243; = ó – HTML entity pre znaky s diakritikou -->
   <div class="tab" onclick="show('statistiky')">&#352;tatistick&#233; met&#243;dy</div>
+  <!-- Záložka Pasce má červenkavý podklad (rgba(183,28,28,0.15)) a ružový text pre varovanie -->
   <div class="tab" onclick="show('pasce')" style="background:rgba(183,28,28,0.15);color:#ef9a9a;">⚠️ Pasce &amp; záludnosti</div>
 </div>
 
@@ -1819,17 +1926,30 @@ print(f"PyTorch std:  {irr_tensor.std().item():.2f}")</code></pre>
 </div>
 </div>
 <script>
+// show(id) = prepne aktívny panel záložky; volá sa pri kliknutí na .tab (onclick="show('...')")
 function show(id) {
+  // Odstrán triedu 'active' zo všetkých panelov (skryje ich všetky)
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  // Odstrán triedu 'active' zo všetkých záložiek (vizuálne ich deaktivuje)
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  // Zobraz panel s daným id (pridaj 'active' → display:block v CSS)
   document.getElementById(id).classList.add('active');
+  // Aktivuj záložku na ktorú sme klikli (event.target = kliknutý element)
   event.target.classList.add('active');
 }
+
+// tog(el) = rozklikne/skryje detail kroku pipeline; volá sa onclick na .stage elemente
 function tog(el) {
+  // toggle('open') = ak má .stage-body triedu 'open' → odstráni ju (skryje), inak pridá (zobrazí)
   el.querySelector('.stage-body').classList.toggle('open');
 }
+
+// qa(el) = rozklikne/skryje odpoveď Q&A; volá sa onclick na .question elemente
 function qa(el) {
+  // Prepni triedu 'open' na otázke (zmení zaoblenie rohov a farbu pozadia)
   el.classList.toggle('open');
+  // nextElementSibling = HTML element hneď za otázkou (= .answer div s odpoveďou)
+  // toggle('open') na .answer → display:none ↔ display:block (CSS: .answer.open { display:block })
   el.nextElementSibling.classList.toggle('open');
 }
 </script>

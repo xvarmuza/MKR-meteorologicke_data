@@ -1,178 +1,252 @@
 <!DOCTYPE html>
+<!-- Deklarácia HTML5 dokumentu – musí byť na úplnom začiatku súboru -->
 <html lang="sk">
+<!-- lang="sk" = jazyk stránky je slovenčina (dôležité pre čítačky obrazovky a SEO) -->
 <head>
+  <!-- Sekcia hlavičky – neviditeľná pre používateľa, obsahuje metadáta a štýly -->
   <meta charset="UTF-8">
+  <!-- UTF-8 kódovanie – zabezpečuje správne zobrazenie slovenských znakov (á, é, č, š, ž...) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Responsívnosť: nastaví zobrazenie na mobiloch tak, aby stránka nevyžadovala horizontálny scroll -->
   <title>Fyzikálne medze parametrov – Meteorologická stanica</title>
+  <!-- Nadpis záložky prehliadača a výsledku vyhľadávača -->
+
   <style>
+    /* ── RESET ─────────────────────────────────────────────────────────────
+       Odstránenie predvolených okrajov a výplní pre všetky elementy.
+       box-sizing: border-box = šírka/výška zahŕňa padding aj border (nie len obsah)
+    */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── TELO STRÁNKY ──────────────────────────────────────────────────────
+       Základné nastavenie textu, pozadia a centrálneho rozloženia obsahu.
+       min-height: 100vh = stránka má minimálne výšku celého okna prehliadača
+    */
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f0f4f8;
-      color: #1a2332;
-      padding: 2rem;
-      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif; /* Systémový bezpätkový font */
+      background: #f0f4f8;   /* Svetlé modrasté pozadie stránky */
+      color: #1a2332;        /* Tmavá farba základného textu */
+      padding: 2rem;         /* Vnútorný odsek 32px zo všetkých strán */
+      min-height: 100vh;     /* Stránka siaha minimálne na celú výšku okna */
     }
 
+    /* ── HLAVIČKA ──────────────────────────────────────────────────────────
+       Kontajner pre nadpis a podnapis stránky.
+       max-width + margin auto = vycentrovanie na max. šírke 1100px
+    */
     header {
-      max-width: 1100px;
-      margin: 0 auto 2rem;
+      max-width: 1100px;      /* Maximálna šírka obsahu hlavičky */
+      margin: 0 auto 2rem;   /* Vycentrovaný, spodný odsek 32px pred kartou */
     }
 
+    /* Hlavný nadpis H1 v hlavičke */
     header h1 {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #1a2332;
-      margin-bottom: 0.4rem;
+      font-size: 1.7rem;     /* Veľkosť písma: 1.7× základná veľkosť (≈27px) */
+      font-weight: 700;      /* Tučné písmo */
+      color: #1a2332;        /* Tmavá farba nadpisu */
+      margin-bottom: 0.4rem; /* Malý spodný odsek pred podnápisom */
     }
 
+    /* Podnapis / perex pod H1 */
     header p {
-      color: #4a5568;
-      font-size: 0.95rem;
+      color: #4a5568;        /* Stredne šedá – menej výrazná ako H1 */
+      font-size: 0.95rem;    /* Mierne menší text ako základný */
     }
 
+    /* ── KARTA (card) ──────────────────────────────────────────────────────
+       Biely zaoblený kontajner, do ktorého je vložená celá tabuľka.
+       overflow: hidden = zaoblené rohy sa aplikujú aj na obsah (tabuľku)
+    */
     .card {
-      max-width: 1100px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      overflow: hidden;
+      max-width: 1100px;                    /* Rovnaká max. šírka ako hlavička */
+      margin: 0 auto;                       /* Vycentrovanie */
+      background: #fff;                     /* Biele pozadie karty */
+      border-radius: 12px;                  /* Zaoblené rohy (12px polomer) */
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08); /* Jemný tieň karty */
+      overflow: hidden;                     /* Zaoblené rohy sa odrežú aj pre tabuľku */
     }
 
+    /* ── TABUĽKA ───────────────────────────────────────────────────────────
+       Celá šírka, bez medzery medzi bunkami (border-collapse: collapse).
+    */
     table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
+      width: 100%;            /* Tabuľka zaberá celú šírku karty */
+      border-collapse: collapse; /* Zrušenie dvojitých ohraničení medzi bunkami */
+      font-size: 0.88rem;    /* Mierne menší text pre kompaktnosť */
     }
 
+    /* Riadok hlavičky tabuľky (<thead><tr>) – tmavé modré pozadie, biely text */
     thead tr {
-      background: #2b4c7e;
-      color: #fff;
+      background: #2b4c7e;   /* Tmavá modrá pozadie hlavičky */
+      color: #fff;           /* Biely text v hlavičke */
     }
 
+    /* Bunky hlavičky (<th>) */
     thead th {
-      padding: 0.85rem 1rem;
-      text-align: left;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      white-space: nowrap;
+      padding: 0.85rem 1rem;  /* Vnútorný odsek: 0.85rem hore/dole, 1rem vľavo/vpravo */
+      text-align: left;       /* Text zarovnaný doľava */
+      font-weight: 600;       /* Tučný text */
+      letter-spacing: 0.03em; /* Malé rozostúpenie písmen pre čitateľnosť */
+      white-space: nowrap;    /* Zabráni zalomeniu textu v hlavičke */
     }
 
+    /* Striedanie pozadia párnych riadkov tela tabuľky (zebra efekt) */
     tbody tr:nth-child(even) { background: #f7fafc; }
+    /* Zvýraznenie riadku pri nabehnutí myšou (hover) */
     tbody tr:hover { background: #ebf4ff; }
 
+    /* Bežná bunka (<td>) v tele tabuľky */
     td {
-      padding: 0.7rem 1rem;
-      border-bottom: 1px solid #e2e8f0;
-      vertical-align: top;
+      padding: 0.7rem 1rem;         /* Vnútorný odsek bunky */
+      border-bottom: 1px solid #e2e8f0; /* Tenká spodná čiara medzi riadkami */
+      vertical-align: top;          /* Obsah zarovnaný nahor (pri viacriadkových bunkách) */
     }
 
+    /* ── TRIEDY STĹPCOV ────────────────────────────────────────────────────
+       Každý stĺpec tabuľky má vlastnú CSS triedu pre špecifický štýl.
+    */
+
+    /* Stĺpec s názvom parametra – monospace font, modrá farba, bez zalomenia */
     .col-name {
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-weight: 600;
-      color: #2b4c7e;
-      white-space: nowrap;
+      font-family: 'Consolas', 'Courier New', monospace; /* Písmo kódu */
+      font-weight: 600;     /* Tučné */
+      color: #2b4c7e;       /* Modrá farba (rovnaká ako pozadie hlavičky) */
+      white-space: nowrap;  /* Bez zalomenia (názvy sú krátke identifikátory) */
     }
 
+    /* Stĺpec s fyzikálnou jednotkou – šedá, bez zalomenia */
     .col-unit {
-      color: #718096;
-      white-space: nowrap;
+      color: #718096;       /* Šedá – menej dôležitá informácia */
+      white-space: nowrap;  /* Jednotky sa nezalomujú (napr. "W/m²") */
     }
 
+    /* Stĺpec s rozsahom (min/max) – monospace, tmavozelená farba */
     .col-range {
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-weight: 600;
-      color: #276749;
-      white-space: nowrap;
+      font-family: 'Consolas', 'Courier New', monospace; /* Číselné hodnoty v monospace */
+      font-weight: 600;     /* Tučné pre ľahkú čitateľnosť */
+      color: #276749;       /* Tmavá zelená – signalizuje "platný rozsah" */
+      white-space: nowrap;  /* Bez zalomenia */
     }
 
-    .col-desc { color: #2d3748; line-height: 1.45; }
+    /* Stĺpec s textovým zdôvodnením medziach */
+    .col-desc { color: #2d3748; line-height: 1.45; } /* Tmavý text, väčší riadkový odstup */
 
+    /* Stĺpec so zdrojovými odkazmi – štýl odkazov */
     .col-source a {
-      color: #3182ce;
-      text-decoration: none;
-      font-size: 0.82rem;
-      display: inline-block;
-      margin: 1px 0;
+      color: #3182ce;           /* Modrá farba odkazu */
+      text-decoration: none;    /* Bez podčiarknutia v kľudovom stave */
+      font-size: 0.82rem;       /* Menší text (sekundárna informácia) */
+      display: inline-block;    /* Pre správny margin */
+      margin: 1px 0;            /* Malý vertikálny odsek medzi odkazmi */
     }
+    /* Podčiarknutie odkazu pri hover */
     .col-source a:hover { text-decoration: underline; }
 
+    /* ── ODZNAKY (badge) ───────────────────────────────────────────────────
+       Farebné štítky kategórie parametra (RAD, TEMP, HUM, PRES, MECH, SUN/GEO).
+       Každá kategória má vlastnú kombináciu farby pozadia a textu.
+    */
     .badge {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 1px 7px;
-      border-radius: 9px;
-      margin-bottom: 4px;
-      letter-spacing: 0.02em;
+      display: inline-block; /* Zobrazenie ako inline blok (má margin, padding) */
+      font-size: 0.72rem;    /* Veľmi malý text pre kompaktný štítok */
+      font-weight: 600;      /* Tučné */
+      padding: 1px 7px;      /* Malý vnútorný odsek */
+      border-radius: 9px;    /* Pilulkový tvar (zaoblenie = polomer 9px) */
+      margin-bottom: 4px;    /* Odsek pod odznakom pred názvom parametra */
+      letter-spacing: 0.02em;/* Jemné rozostúpenie písmen */
     }
-    .badge-rad  { background: #fef3c7; color: #92400e; }
-    .badge-temp { background: #fee2e2; color: #991b1b; }
-    .badge-hum  { background: #dbeafe; color: #1e40af; }
-    .badge-pres { background: #e0e7ff; color: #3730a3; }
-    .badge-mech { background: #d1fae5; color: #065f46; }
-    .badge-sun  { background: #fce7f3; color: #9d174d; }
+    .badge-rad  { background: #fef3c7; color: #92400e; } /* Žltá  – žiarenie (RADiation) */
+    .badge-temp { background: #fee2e2; color: #991b1b; } /* Červená – teplota (TEMPerature) */
+    .badge-hum  { background: #dbeafe; color: #1e40af; } /* Modrá  – vlhkosť (HUMidity) */
+    .badge-pres { background: #e0e7ff; color: #3730a3; } /* Fialová – tlak (PRESSure) */
+    .badge-mech { background: #d1fae5; color: #065f46; } /* Zelená – mechanické (MECHanical) */
+    .badge-sun  { background: #fce7f3; color: #9d174d; } /* Ružová – slnko/geolokácia (SUN/GEO) */
 
+    /* ── RIADOK OZNAČENIA SEKCIE ────────────────────────────────────────────
+       Šedý oddeľovací riadok medzi skupinami parametrov (napr. "Žiarenie", "Teplota").
+       Je to <tr class="section-label"> so <td colspan="6">.
+    */
     .section-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #a0aec0;
-      padding: 0.5rem 1rem 0.2rem;
-      background: #f7fafc;
-      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.7rem;          /* Veľmi malý text */
+      font-weight: 700;           /* Tučné */
+      text-transform: uppercase;  /* Veľké písmená */
+      letter-spacing: 0.08em;     /* Väčší rozostup – LABEL efekt */
+      color: #a0aec0;             /* Svetlá šedá */
+      padding: 0.5rem 1rem 0.2rem;/* Odsadenie */
+      background: #f7fafc;        /* Svetlé pozadie odlišujúce sekciu od riadkov */
+      border-bottom: 1px solid #e2e8f0; /* Tenká spodná čiara */
     }
 
+    /* ── PÄTA ──────────────────────────────────────────────────────────────
+       Centrovane vycentrovaný malý text pod tabuľkou (zdroje, autorstvo).
+    */
     footer {
-      max-width: 1100px;
-      margin: 1.5rem auto 0;
-      font-size: 0.8rem;
-      color: #718096;
-      text-align: center;
+      max-width: 1100px;         /* Rovnaká max. šírka ako obsah */
+      margin: 1.5rem auto 0;    /* Horný odsek 1.5rem, vycentrovaný */
+      font-size: 0.8rem;        /* Malý text */
+      color: #718096;           /* Šedá farba */
+      text-align: center;       /* Centrovanie */
     }
   </style>
 </head>
 <body>
 
+<!-- ── HLAVIČKA STRÁNKY ──────────────────────────────────────────────────────
+     Zobrazuje názov dokumentu a stručnú informáciu o meracej stanici.
+-->
 <header>
   <h1>Fyzikálne medze meraných parametrov</h1>
+  <!-- Podnapis s lokalitou stanice a typom prístroja -->
   <p>Meteorologická stanica Alpnach, Švajčiarsko &nbsp;|&nbsp; Kipp &amp; Zonen SMP-series pyranometer</p>
 </header>
 
+<!-- ── HLAVNÁ KARTA S TABUĽKOU ───────────────────────────────────────────────
+     Biely zaoblený kontajner pre celú tabuľku fyzikálnych medzí.
+     Obsahuje 6 stĺpcov: Stĺpec v CSV | Jednotka | Min | Max | Zdôvodnenie | Zdroj
+-->
 <div class="card">
 <table>
+
+  <!-- Hlavička tabuľky – pevné názvy stĺpcov, nezopakúvajú sa pri scrollovaní -->
   <thead>
     <tr>
-      <th>Stĺpec v CSV</th>
-      <th>Jednotka</th>
-      <th>Min</th>
-      <th>Max</th>
-      <th>Zdôvodnenie medze</th>
-      <th>Zdroj</th>
+      <th>Stĺpec v CSV</th>      <!-- Presný názov stĺpca v dátovom súbore -->
+      <th>Jednotka</th>           <!-- Fyzikálna jednotka meranej veličiny -->
+      <th>Min</th>                <!-- Spodná hranica povoleného rozsahu -->
+      <th>Max</th>                <!-- Horná hranica povoleného rozsahu -->
+      <th>Zdôvodnenie medze</th>  <!-- Fyzikálne alebo technické zdôvodnenie hodnôt -->
+      <th>Zdroj</th>              <!-- Externé zdroje (dokumentácia prístroja, Wikipedia, NOAA...) -->
     </tr>
   </thead>
+
   <tbody>
 
-    <!-- ── ŽIARENIE ─────────────────────────────────────────── -->
+    <!-- ── ŽIARENIE ─────────────────────────────────────────────────────────
+         Parametre merania slnečného žiarenia pyranometrom SMP10.
+         badge-rad = žltá kategória RADiation
+    -->
     <tr class="section-label"><td colspan="6">Žiarenie</td></tr>
+    <!-- colspan="6" = bunka sa rozprestrie cez všetkých 6 stĺpcov (celý riadok) -->
 
+    <!-- Irradiance: kompenzované globálne slnečné žiarenie -->
     <tr>
       <td class="col-name"><span class="badge badge-rad">RAD</span><br>Irradiance</td>
+      <!-- badge RAD = kategória žiarenie | <br> = zalomenie riadku pred názvom -->
       <td class="col-unit">W/m²</td>
-      <td class="col-range">0</td>
-      <td class="col-range">1 500</td>
+      <!-- Watt na meter štvorcový – fyzikálna jednotka výkonu žiarenia -->
+      <td class="col-range">0</td>        <!-- Minimum: záporné žiarenie fyzikálne neexistuje -->
+      <td class="col-range">1 500</td>    <!-- Maximum: ~1050 W/m² reálne, 1500 = bezpečnostná rezerva -->
       <td class="col-desc">
         Záporné žiarenie je fyzikálne nemožné. Maximum pri zemskom povrchu ~1 050 W/m² (priamy lúč pri slnku v nadhlavníku), s odrazom od snehu/oblakov môže dosahovať ~1 400 W/m². Hranica 1 500 W/m² poskytuje bezpečnostnú rezervu.
       </td>
       <td class="col-source">
+        <!-- Externé zdroje otvárajú sa v novom okne (target="_blank") -->
         <a href="https://en.wikipedia.org/wiki/Solar_irradiance" target="_blank">Solar irradiance – Wikipedia</a><br>
         <a href="https://www.researchgate.net/post/Are_there_minimum_and_maximum_threshold_of_solar_irradiance" target="_blank">ResearchGate – threshold of solar irradiance</a>
       </td>
     </tr>
 
+    <!-- IrradianceNotCompensated: žiarenie pred teplotnou kompenzáciou -->
     <tr>
       <td class="col-name"><span class="badge badge-rad">RAD</span><br>IrradianceNotCompensated</td>
       <td class="col-unit">W/m²</td>
@@ -180,22 +254,28 @@
       <td class="col-range">1 500</td>
       <td class="col-desc">
         Nekompenzovaná hodnota žiarenia pred teplotnou korekciou – rovnaké fyzikálne medze ako <em>Irradiance</em>.
+        <!-- <em> = kurzíva, tu zvýrazňuje názov príbuzného parametra -->
       </td>
       <td class="col-source">
         <a href="https://en.wikipedia.org/wiki/Solar_irradiance" target="_blank">Solar irradiance – Wikipedia</a>
       </td>
     </tr>
 
-    <!-- ── TEPLOTA ─────────────────────────────────────────── -->
+    <!-- ── TEPLOTA ───────────────────────────────────────────────────────────
+         Teploty merané rôznymi senzormi v meracom systéme.
+         badge-temp = červená kategória TEMPerature
+    -->
     <tr class="section-label"><td colspan="6">Teplota</td></tr>
 
+    <!-- BodyTemperature: teplota tela pyranometra (krytu senzora) -->
     <tr>
       <td class="col-name"><span class="badge badge-temp">TEMP</span><br>BodyTemperature</td>
       <td class="col-unit">°C</td>
-      <td class="col-range">−40</td>
-      <td class="col-range">80</td>
+      <td class="col-range">−40</td>   <!-- Min: operačná hranica SMP10 podľa výrobcu -->
+      <td class="col-range">80</td>    <!-- Max: 70°C (SMP10 spec) + 10°C rezerva pri priamom slnku -->
       <td class="col-desc">
         Teplota tela pyranometra. Kipp &amp; Zonen SMP10 udáva operačný teplotný rozsah −40 až +70 °C. Horná hranica rozšírená na 80 °C ako bezpečnostná rezerva (priame slnečné žiarenie na telo senzora).
+        <!-- &amp; = HTML entita pre znak & (nutná v HTML texte) -->
       </td>
       <td class="col-source">
         <a href="https://www.kippzonen.com/Product/281/SMP10-Pyranometer" target="_blank">Kipp &amp; Zonen SMP10 Pyranometer</a><br>
@@ -203,11 +283,12 @@
       </td>
     </tr>
 
+    <!-- HumidityTemp: teplota meraná snímačom relatívnej vlhkosti -->
     <tr>
       <td class="col-name"><span class="badge badge-temp">TEMP</span><br>HumidityTemp</td>
       <td class="col-unit">°C</td>
       <td class="col-range">−40</td>
-      <td class="col-range">60</td>
+      <td class="col-range">60</td>    <!-- Max: 60°C = horná hranica senzora Campbell EE181/HygroVue10 -->
       <td class="col-desc">
         Teplota snímaná snímačom relatívnej vlhkosti. Campbell EE181 a HygroVue10 udávajú rozsah −40 až +60 °C.
       </td>
@@ -217,6 +298,7 @@
       </td>
     </tr>
 
+    <!-- PressureTemp: vnútorná teplota tlakového senzora -->
     <tr>
       <td class="col-name"><span class="badge badge-temp">TEMP</span><br>PressureTemp</td>
       <td class="col-unit">°C</td>
@@ -230,6 +312,7 @@
       </td>
     </tr>
 
+    <!-- PressureTempAvg: kĺzavý priemer teploty tlakového senzora -->
     <tr>
       <td class="col-name"><span class="badge badge-temp">TEMP</span><br>PressureTempAvg</td>
       <td class="col-unit">°C</td>
@@ -243,14 +326,18 @@
       </td>
     </tr>
 
-    <!-- ── VLHKOSŤ ─────────────────────────────────────────── -->
+    <!-- ── VLHKOSŤ ───────────────────────────────────────────────────────────
+         Relatívna vlhkosť vzduchu – fyzikálna definícia rozsahu 0–100 %.
+         badge-hum = modrá kategória HUMidity
+    -->
     <tr class="section-label"><td colspan="6">Vlhkosť</td></tr>
 
+    <!-- RelativeHumidity: relatívna vlhkosť vzduchu -->
     <tr>
       <td class="col-name"><span class="badge badge-hum">HUM</span><br>RelativeHumidity</td>
       <td class="col-unit">%</td>
-      <td class="col-range">0</td>
-      <td class="col-range">100</td>
+      <td class="col-range">0</td>     <!-- Min: 0% = absolútne suché (bez vodnej pary) -->
+      <td class="col-range">100</td>   <!-- Max: 100% = vzduch nasýtený vodnou parou -->
       <td class="col-desc">
         Relatívna vlhkosť vzduchu. Fyzikálna definícia: 0 % = absolútne suché, 100 % = nasýtené vodnou parou. Hodnoty mimo tohto rozsahu sú fyzikálne nemožné.
       </td>
@@ -259,14 +346,19 @@
       </td>
     </tr>
 
-    <!-- ── TLAK ───────────────────────────────────────────── -->
+    <!-- ── ATMOSFERICKÝ TLAK ─────────────────────────────────────────────────
+         Tlak atmosféry – medze odvodené z historických extrémov na Zemi.
+         badge-pres = fialová kategória PRESSure
+    -->
     <tr class="section-label"><td colspan="6">Atmosferický tlak</td></tr>
 
+    <!-- Pressure: okamžitá hodnota atmosferického tlaku -->
     <tr>
       <td class="col-name"><span class="badge badge-pres">PRES</span><br>Pressure</td>
       <td class="col-unit">hPa</td>
-      <td class="col-range">870</td>
-      <td class="col-range">1 085</td>
+      <!-- hPa = hektopascal = 100 Pa; historicky mb = milibar (rovnaká hodnota) -->
+      <td class="col-range">870</td>   <!-- Min: najnižší nameraný tlak ~870 hPa (stred cyklónu) -->
+      <td class="col-range">1 085</td> <!-- Max: najvyšší nameraný tlak 1084.8 hPa (Mongolsko) -->
       <td class="col-desc">
         Atmosferický tlak pri povrchu. Historické extrémy: minimum 870 hPa (stred tropického cyklónu), maximum 1 084.8 hPa (Tosontsengel, Mongolsko, 19. 12. 2001).
       </td>
@@ -276,6 +368,7 @@
       </td>
     </tr>
 
+    <!-- PressureAvg: kĺzavý priemer atmosferického tlaku -->
     <tr>
       <td class="col-name"><span class="badge badge-pres">PRES</span><br>PressureAvg</td>
       <td class="col-unit">hPa</td>
@@ -289,14 +382,18 @@
       </td>
     </tr>
 
-    <!-- ── MECHANICKÉ ─────────────────────────────────────── -->
+    <!-- ── MECHANICKÉ PARAMETRE ──────────────────────────────────────────────
+         Parametre ventilátora (CVF4), ohrievača a naklonenia pyranometra.
+         badge-mech = zelená kategória MECHanical
+    -->
     <tr class="section-label"><td colspan="6">Mechanické parametre (ventilátor, ohrievač, naklonenie)</td></tr>
 
+    <!-- TiltAngle: okamžitý uhol naklonenia pyranometra od horizontály -->
     <tr>
       <td class="col-name"><span class="badge badge-mech">MECH</span><br>TiltAngle</td>
       <td class="col-unit">°</td>
-      <td class="col-range">−10</td>
-      <td class="col-range">10</td>
+      <td class="col-range">−10</td>  <!-- Min: −10° = maximálne naklonenie v zápornom smere -->
+      <td class="col-range">10</td>   <!-- Max: +10° = maximálne naklonenie v kladnom smere -->
       <td class="col-desc">
         Uhol naklonenia pyranometra od horizontály. Pyranometre sa inštalujú takmer horizontálne – odchýlka nad ±10° signalizuje pád alebo posunutie senzora. V dátach: max nameraná hodnota 2.08°.
       </td>
@@ -306,6 +403,7 @@
       </td>
     </tr>
 
+    <!-- TiltAngleAvg: kĺzavý priemer uhla naklonenia -->
     <tr>
       <td class="col-name"><span class="badge badge-mech">MECH</span><br>TiltAngleAvg</td>
       <td class="col-unit">°</td>
@@ -319,11 +417,13 @@
       </td>
     </tr>
 
+    <!-- FanSpeed: otáčky ventilátora ventilačnej jednotky CVF4 -->
     <tr>
       <td class="col-name"><span class="badge badge-mech">MECH</span><br>FanSpeed</td>
       <td class="col-unit">RPM</td>
-      <td class="col-range">0</td>
-      <td class="col-range">15 000</td>
+      <!-- RPM = Revolutions Per Minute = otáčky za minútu -->
+      <td class="col-range">0</td>        <!-- Min: ventilátor stojí (0 RPM) -->
+      <td class="col-range">15 000</td>   <!-- Max: fyzikálny limit DC ventilátora CVF4 -->
       <td class="col-desc">
         Otáčky ventilátora ventilačnej jednotky CVF4. V dátach: 8 779–9 490 RPM. Horná hranica 15 000 RPM zodpovedá fyzikálnemu limitu typických DC ventilátorov tohto typu.
       </td>
@@ -333,11 +433,12 @@
       </td>
     </tr>
 
+    <!-- HeaterCurrent: elektrický prúd ohrievača krytu CVF4 -->
     <tr>
       <td class="col-name"><span class="badge badge-mech">MECH</span><br>HeaterCurrent</td>
-      <td class="col-unit">A</td>
-      <td class="col-range">0</td>
-      <td class="col-range">1.0</td>
+      <td class="col-unit">A</td>        <!-- A = Ampér = jednotka elektrického prúdu -->
+      <td class="col-range">0</td>       <!-- Min: ohrievač vypnutý -->
+      <td class="col-range">1.0</td>     <!-- Max: celkový odber CVF4 pri 12V s ohrievačom = 0.9A -->
       <td class="col-desc">
         Prúd ohrievača CVF4. Celkový odber jednotky pri 12 V s ohrievačom 5.5 W je 0.9 A. V dátach: 0.320–0.337 A. Horná hranica 1.0 A pokrýva maximálny odber ohrievača.
       </td>
@@ -346,11 +447,12 @@
       </td>
     </tr>
 
+    <!-- FanCurrent: elektrický prúd motora ventilátora CVF4 -->
     <tr>
       <td class="col-name"><span class="badge badge-mech">MECH</span><br>FanCurrent</td>
       <td class="col-unit">A</td>
-      <td class="col-range">0</td>
-      <td class="col-range">0.5</td>
+      <td class="col-range">0</td>       <!-- Min: ventilátor stojí -->
+      <td class="col-range">0.5</td>     <!-- Max: ventilátor ~5W pri 12V = ~0.42A + rezerva -->
       <td class="col-desc">
         Prúd ventilátora CVF4. Ventilátor spotrebuje ~5 W pri 12 V → ~0.42 A. V dátach: 0.064–0.073 A (meranie čiastkového obvodu). Horná hranica 0.5 A.
       </td>
@@ -359,16 +461,21 @@
       </td>
     </tr>
 
-    <!-- ── POLOHA SLNKA / STANICE ─────────────────────────── -->
+    <!-- ── POLOHA STANICE A SLNKA ────────────────────────────────────────────
+         Geografické súradnice stanice (konštanty) a astronomická poloha slnka.
+         badge-sun = ružová kategória SUN/GEO
+    -->
     <tr class="section-label"><td colspan="6">Poloha stanice a slnka</td></tr>
 
+    <!-- SunLatitude: zemepisná šírka stanice (konštanta v dátach) -->
     <tr>
       <td class="col-name"><span class="badge badge-sun">GEO</span><br>SunLatitude</td>
       <td class="col-unit">°</td>
-      <td class="col-range">−90</td>
-      <td class="col-range">90</td>
+      <td class="col-range">−90</td>   <!-- Min: −90° = južný pól Zeme (WGS84) -->
+      <td class="col-range">90</td>    <!-- Max: +90° = severný pól Zeme (WGS84) -->
       <td class="col-desc">
         Zemepisná šírka meteorologickej stanice (v dátach konštantná: 46.9359° = Alpnach, Švajčiarsko). Fyzikálne medze WGS84: −90° (južný pól) až +90° (severný pól).
+        <!-- WGS84 = World Geodetic System 1984 – súradnicový systém GPS -->
       </td>
       <td class="col-source">
         <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system" target="_blank">Geographic coordinate system – Wikipedia</a><br>
@@ -376,11 +483,12 @@
       </td>
     </tr>
 
+    <!-- SunLongitude: zemepisná dĺžka stanice (konštanta v dátach) -->
     <tr>
       <td class="col-name"><span class="badge badge-sun">GEO</span><br>SunLongitude</td>
       <td class="col-unit">°</td>
-      <td class="col-range">−180</td>
-      <td class="col-range">180</td>
+      <td class="col-range">−180</td>  <!-- Min: −180° = medzinárodná dátumová čiara (západ) -->
+      <td class="col-range">180</td>   <!-- Max: +180° = medzinárodná dátumová čiara (východ) -->
       <td class="col-desc">
         Zemepisná dĺžka meteorologickej stanice (v dátach konštantná: 8.2758° = Alpnach, Švajčiarsko). Fyzikálne medze WGS84: −180° až +180°.
       </td>
@@ -390,11 +498,12 @@
       </td>
     </tr>
 
+    <!-- SunAzimuth: kompasový smer slnka na oblohe -->
     <tr>
       <td class="col-name"><span class="badge badge-sun">SUN</span><br>SunAzimuth</td>
       <td class="col-unit">°</td>
-      <td class="col-range">0</td>
-      <td class="col-range">360</td>
+      <td class="col-range">0</td>     <!-- Min: 0° = sever -->
+      <td class="col-range">360</td>   <!-- Max: 360° = opäť sever (plný kruh) -->
       <td class="col-desc">
         Kompasový smer slnka: 0° = sever, 90° = východ, 180° = juh, 270° = západ. Ranné hodnoty 0–180°, poobedné 180–360°. V dátach: 53.4°–306.6°.
       </td>
@@ -404,13 +513,16 @@
       </td>
     </tr>
 
+    <!-- SunZenith: uhol slnka od nadhlavníka (pozor: v dátach sa správa ako elevačný uhol) -->
     <tr>
       <td class="col-name"><span class="badge badge-sun">SUN</span><br>SunZenith</td>
       <td class="col-unit">°</td>
-      <td class="col-range">0</td>
-      <td class="col-range">90</td>
+      <td class="col-range">0</td>    <!-- Min: 0° = slnko priamo nad hlavou (nadhlavník) -->
+      <td class="col-range">90</td>   <!-- Max: 90° = slnko na horizonte (západ/východ) -->
       <td class="col-desc">
         Zenitový uhol slnka: 0° = slnko priamo nad hlavou, 90° = horizont (západ/východ slnka). Keďže merania prebiehajú výhradne počas denného svetla, hodnoty ≥90° signalizujú chybu. V dátach: max 66.5°.
+        <!-- Poznámka: parameter sa v dátach správa ako ELEVAČNÝ uhol (nie zenitový),
+             ale fyzikálne medze (0, 90) sú správne pre oba typy uhlov pri denných meraniach -->
       </td>
       <td class="col-source">
         <a href="https://en.wikipedia.org/wiki/Solar_zenith_angle" target="_blank">Solar zenith angle – Wikipedia</a><br>
@@ -421,9 +533,14 @@
   </tbody>
 </table>
 </div>
+<!-- Koniec .card -->
 
+<!-- ── PÄTA STRÁNKY ───────────────────────────────────────────────────────────
+     Informácia o zdrojoch a príslušnosti k projektu.
+-->
 <footer>
   Vygenerované pre projekt MKR – Meteorologické dáta &nbsp;|&nbsp; Zdroje: Kipp &amp; Zonen, Campbell Scientific, NOAA, Wikipedia, WMO
+  <!-- &nbsp; = non-breaking space (nezalomiteľná medzera) pre vizuálne oddelenie -->
 </footer>
 
 </body>

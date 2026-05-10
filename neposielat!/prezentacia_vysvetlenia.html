@@ -1,99 +1,186 @@
+<!-- Hĺbkové vysvetlenia Q&A ku každému slajdu prezentácie MKR pre potreby obhajoby projektu. -->
+<!-- Každý "slide-blok" obsahuje: recap (čo bolo na slajde), sekcie otázok a Q&A karty s odpoveďami. -->
 <!DOCTYPE html>
+<!-- DOCTYPE html = deklarácia dokumentu ako HTML5 (bez verzie = HTML5); musí byť prvý riadok -->
 <html lang="sk">
+<!-- lang="sk" = nastaví jazyk dokumentu na slovenčinu (dôležité pre čítačky obrazovky a SEO) -->
 <head>
+<!-- head = hlavička dokumentu – metadáta, CSS, názov; nezobrazuje sa priamo na stránke -->
 <meta charset="UTF-8">
+<!-- charset="UTF-8" = kódovanie znakov; UTF-8 podporuje všetky slovenské znaky (ž, á, é, č, ...) -->
 <title>Prezentácia – Hĺbkové vysvetlenia pre obhajobu</title>
+<!-- title = text zobrazený na záložke prehliadača a v histórii; nezobrazuje sa v tele stránky -->
 <style>
+/* style = vnorený CSS štýl – definuje vizuálny vzhľad všetkých tried (class) v dokumente */
+
+/* === GLOBÁLNY RESET === */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* * = aplikuje sa na všetky elementy; box-sizing:border-box → padding/border sú súčasťou šírky */
+/* margin:0; padding:0 → odstraňujú predvolené medzery prehliadača okolo nadpisov, odsekov atď. */
+
 body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; background: #eceff1; color: #1a1a1a; padding: 24px 16px; }
+/* body = celá viditeľná stránka; sivé pozadie #eceff1, tmavý text #1a1a1a, odsadenie 24px nahor/dolu */
 
 h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bottom: 4px; }
+/* h1.page-title = centrovaný nadpis stránky; tmavomodrá farba #1a237e, veľkosť 15pt */
 .page-sub { text-align: center; color: #78909c; font-size: 10pt; margin-bottom: 28px; }
+/* .page-sub = podnadpis pod h1; sivá farba #78909c, menší text 10pt, medzera 28px pod */
 
 /* === SLIDE BLOK === */
+/* .slide-blok = biela karta pre jeden slajd; zaoblené rohy 14px, tieň, centrovaná, max šírka 920px */
 .slide-blok { background: white; border-radius: 14px; box-shadow: 0 3px 16px rgba(0,0,0,0.09); max-width: 920px; margin: 0 auto 44px; overflow: hidden; }
+/* overflow:hidden → zabraňuje tomu aby zaoblené rohy presvitali cez obsah vnorených divov */
+
+/* .slide-hlavicka = modrý gradient hlavičkový pruh slajdu; flexbox pre zarovnanie čísla a názvu */
 .slide-hlavicka { background: linear-gradient(135deg, #1a237e, #3949ab); color: white; padding: 16px 26px; display: flex; align-items: center; gap: 14px; }
+/* linear-gradient(135deg,...) = uhlopriečny gradient zľava-hore doprava-dole; 135° = 45° uhlopriečka */
+
+/* .slide-num = kruhový badge s číslom slajdu; rgba(255,255,255,0.2) = polopriesvitná biela */
 .slide-num { background: rgba(255,255,255,0.2); border-radius: 50%; width: 38px; height: 38px; min-width: 38px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; }
+/* border-radius:50% = z obdĺžnika spraví kruh; min-width:38px zabraňuje zmenšeniu pri flexbox */
+
 .slide-nazov { font-size: 1.2rem; font-weight: 600; }
+/* .slide-nazov = biely tučný text s názvom slajdu v hlavičkovom pruhu */
+
 .slide-telo { padding: 22px 26px; }
+/* .slide-telo = odsadenie vnútorného obsahu slajdu (recap + sekcie + Q&A) od okrajov karty */
 
 /* Recap - co bolo na slajde */
+/* .recap = modro-orámovaný box "čo bolo na slajde" – pripomienka obsahu slajdu pred otázkami */
 .recap { background: #f0f4ff; border-left: 4px solid #3949ab; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 22px; font-size: 10pt; color: #333; }
+/* border-left:4px solid = zvislá modrá čiara na ľavom okraji (štýl "blockquote" vizuálne) */
 .recap strong { color: #1a237e; }
+/* .recap strong = tmavomodrá farba pre text "Na slajde:" vnútri recap boxu */
 
 /* Sekcie s otazkami */
+/* .sekcia-title = sivý oddeľovač nadpisu skupiny otázok (VERZÁLKY, tenká spodná čiara) */
 .sekcia-title { font-size: 11pt; font-weight: 700; color: #455a64; text-transform: uppercase; letter-spacing: 0.6px; margin: 18px 0 10px; padding-bottom: 5px; border-bottom: 2px solid #cfd8dc; }
+/* text-transform:uppercase = text zobrazuje ako VERZÁLKY bez zmeny v HTML kóde */
+/* letter-spacing:0.6px = mierne roztiahnuté písmena – typické pre nadpisy sekčných delimitrov */
 
 /* Q&A karty */
+/* .qa = kontajner celého Q&A páru (otázka + odpoveď); orámovaný, zaoblený */
 .qa { border: 1px solid #e8eaf6; border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+/* .qa-q = modrý pruh otázky; CSS ::before pridáva "Q: " pred každú otázku automaticky */
 .qa-q { background: #e8eaf6; padding: 11px 16px; font-size: 10.5pt; font-weight: 600; color: #1a237e; }
 .qa-q::before { content: "Q: "; color: #3949ab; }
+/* ::before = pseudoelement – vkladá text "Q: " pred každú .qa-q bez zmeny HTML kódu */
+
+/* .qa-a = biela časť odpovede; CSS ::before pridáva "A: " (zelenou farbou) automaticky */
 .qa-a { padding: 13px 16px; font-size: 10.5pt; line-height: 1.75; color: #2a2a2a; }
 .qa-a::before { content: "A: "; font-weight: 700; color: #2e7d32; }
+/* line-height:1.75 = 1.75× výška riadku – lepšia čitateľnosť dlhých odpovedí */
 .qa-a ul { margin: 8px 0 6px 22px; }
+/* ul odsadenie 22px od ľavého okraja – zarovnáva odrážky s textom "A: " */
 .qa-a li { margin-bottom: 5px; }
+/* 5px medzera pod každou odrážkou pre lepšiu čitateľnosť zoznamov */
+
+/* .qa-a code = inline kódový text (monospace, šedý podklad, orámovanie) */
 .qa-a code { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 1px 6px; font-family: 'Consolas', monospace; font-size: 9.5pt; }
+
+/* .qa-a pre = blok zdrojového kódu (viacriadkový); šedý podklad, monospace, vodorovný posun */
 .qa-a pre { background: #f8f9ff; border: 1px solid #e0e3ff; border-radius: 6px; padding: 10px 14px; font-family: 'Consolas', monospace; font-size: 9pt; margin: 8px 0; line-height: 1.5; overflow-x: auto; }
+/* overflow-x:auto = ak je kód dlhý, zobrazí horizontálny scrollbar namiesto zalamovanie */
+
+/* .qa-a .formula = zvýraznený blok matematického vzorca (žltý podklad) */
 .qa-a .formula { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 8px 14px; font-family: 'Consolas', monospace; font-size: 10pt; margin: 8px 0; color: #5d4037; }
+
+/* .qa-a .poznamka = zeleno-rámovaný box s doplňujúcou poznámkou alebo tipom */
 .qa-a .poznamka { background: #e8f5e9; border-left: 3px solid #388e3c; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 9.5pt; color: #2e7d32; }
+
+/* .qa-a .varovanie = oranžový box upozorňujúci na bežné chyby alebo "pasti" */
 .qa-a .varovanie { background: #fff3e0; border-left: 3px solid #f57c00; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 9.5pt; color: #e65100; }
 
 /* Kľúčové pojmy */
+/* .pojmy = flexbox obal pre zoznam kľúčových pojmov (chips/badges) na konci každého slajdu */
 .pojmy { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
-.pojem { background: #e8eaf6; color: #1a237e; border-radius: 20px; padding: 4px 14px; font-size: 9.5pt; font-weight: 600; }
+/* flex-wrap:wrap = pojmy sa zalamujú do nového riadku ak nepasujú vedľa seba */
 
+/* .pojem = jednotlivý chip/badge s kľúčovým pojmom (modré zaoblené oválne tlačidlo) */
+.pojem { background: #e8eaf6; color: #1a237e; border-radius: 20px; padding: 4px 14px; font-size: 9.5pt; font-weight: 600; }
+/* border-radius:20px = veľký polomer → oválny "pill" tvar aj pre krátke pojmy */
+
+/* Tlač – štýly keď sa stránka tlačí (CTRL+P alebo PDF) */
 @media print { body { background: white; padding: 0; } .slide-blok { box-shadow: none; border: 1px solid #ccc; margin-bottom: 20px; } }
+/* @media print = CSS pravidlá aktívne len pri tlači; odstraňuje tieň, šetrí atrament */
+
 </style>
 </head>
+<!-- /head = koniec hlavičky; odteraz nasleduje viditeľný obsah stránky -->
 <body>
+<!-- body = viditeľný obsah stránky – všetko čo užívateľ vidí v prehliadači -->
 
+<!-- Centrovaný nadpis celej Q&A stránky -->
 <h1 class="page-title">Prezentácia — Hĺbkové vysvetlenia pre obhajobu</h1>
+<!-- h1 = hlavný nadpis stránky (len jeden h1 na stránku); zobrazuje sa ako veľký tmavomodrý text -->
+
+<!-- Podnadpis s informáciami o projekte (oddelené znakom &nbsp;|&nbsp; = nezlomiteľná medzera + zvislá čiara) -->
 <div class="page-sub">MKR Semestrálny projekt &nbsp;|&nbsp; Štatistická analýza meteorologických dát &nbsp;|&nbsp; Každá možná otázka profesora s odpoveďou</div>
+<!-- &nbsp; = non-breaking space (HTML entita) – medzera ktorá nezlomí riadok na danom mieste -->
 
 <!-- ===== RÝCHLY ŤAHÁK ===== -->
+<!-- Špeciálna sekcia so súhrnom kľúčových čísel – odlíšená červeným gradientom namiesto modrého -->
+<!-- Táto sekcia používa inline štýly (style="...") namiesto CSS tried, preto je dlhšia -->
 <div style="background:white;border-radius:14px;box-shadow:0 3px 16px rgba(0,0,0,0.09);max-width:920px;margin:0 auto 44px;overflow:hidden;">
+<!-- Červený gradient hlavičkový pruh – rovnaká štruktúra ako .slide-hlavicka ale iná farba (#b71c1c, #e53935) -->
 <div style="background:linear-gradient(135deg,#b71c1c,#e53935);color:white;padding:16px 26px;display:flex;align-items:center;gap:14px;">
+  <!-- Kruhový badge s blesk ikonou namiesto čísla slajdu -->
   <div style="background:rgba(255,255,255,0.2);border-radius:50%;width:38px;height:38px;min-width:38px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;">⚡</div>
+  <!-- Titulok rýchleho ťaháku -->
   <div style="font-size:1.2rem;font-weight:700;">Rýchly ťahák — kľúčové čísla pre obhajobu</div>
+  <!-- Badge "Otvoriť PRED prezentáciou" – margin-left:auto odsunie badge na pravý okraj (flexbox trik) -->
   <div style="margin-left:auto;background:rgba(255,255,255,0.15);border-radius:12px;padding:3px 12px;font-size:0.8rem;">Otvoriť PRED prezentáciou</div>
 </div>
+<!-- Telo ťaháku s metrikami a tabuľkou -->
 <div style="padding:22px 26px;">
 
+<!-- CSS Grid 3 stĺpce – 6 metrík základných štatistík datasetu; gap:14px medzera medzi bunkami -->
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;">
+  <!-- Metrika: Surové vzorky (oranžový podklad #fff3e0, oranžový orámik #ff6f00) -->
   <div style="background:#fff3e0;border:2px solid #ff6f00;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Surové vzorky</div>
     <div style="font-size:22pt;font-weight:700;color:#e65100;">25 600</div>
     <div style="font-size:9pt;color:#888;">meteo_data_raw.csv</div>
   </div>
+  <!-- Metrika: Poškodené vzorky (ružový podklad, červený orámik) -->
   <div style="background:#fce4ec;border:2px solid #c62828;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Poškodené</div>
     <div style="font-size:22pt;font-weight:700;color:#c62828;">189</div>
     <div style="font-size:9pt;color:#888;">0.74% — fyzikálne medze</div>
   </div>
+  <!-- Metrika: Čisté vzorky (zelený podklad, zelený orámik) -->
   <div style="background:#e8f5e9;border:2px solid #2e7d32;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Čisté vzorky</div>
     <div style="font-size:22pt;font-weight:700;color:#2e7d32;">25 411</div>
     <div style="font-size:9pt;color:#888;">cleaned.csv</div>
   </div>
+  <!-- Metrika: NaN hodnoty (modrý podklad, modrý orámik) -->
   <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">NaN hodnoty</div>
     <div style="font-size:22pt;font-weight:700;color:#1a237e;">0</div>
     <div style="font-size:9pt;color:#888;">dataset kompletný</div>
   </div>
+  <!-- Metrika: Chýbajúce dni -->
   <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Chýbajúce dni</div>
     <div style="font-size:22pt;font-weight:700;color:#1a237e;">8</div>
     <div style="font-size:9pt;color:#888;">357/365 dní pokrytých</div>
   </div>
+  <!-- Metrika: Počet skupín za sebou idúcich chýb -->
   <div style="background:#e8eaf6;border:2px solid #3949ab;border-radius:10px;padding:14px;text-align:center;">
     <div style="font-size:9pt;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Chybové skupiny</div>
     <div style="font-size:22pt;font-weight:700;color:#1a237e;">151</div>
     <div style="font-size:9pt;color:#888;">max dĺžka = 12</div>
   </div>
 </div>
+<!-- /grid metrík -->
 
+<!-- Tabuľka doplňujúcich štatistík (parametre, korelácie, lokalita, prístroj) -->
+<!-- border-collapse:collapse = odstraňuje medzery medzi bunkami tabuľky -->
 <table style="width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:16px;">
+<!-- thead = záhlavie tabuľky (opakuje sa pri tlači na každej strane) -->
 <thead><tr><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Parametre</th><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Hodnota</th><th style="background:#3949ab;color:white;padding:8px 12px;text-align:left;">Poznámka</th></tr></thead>
+<!-- tbody = telo tabuľky; strihovanie riadkov: každý druhý riadok má background:#f8f9ff -->
 <tbody>
 <tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Meraných parametrov</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">18</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">vrátane DateTime</td></tr>
 <tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Parametre v korelácii</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">16</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">bez SunLatitude, SunLongitude (std=0)</td></tr>
@@ -105,9 +192,13 @@ h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bott
 <tr style="background:#f8f9ff;"><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">SunZenith ↔ Irradiance</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;color:#2e7d32;">r = +0.790</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">SunZenith = ELEVAČNÝ uhol (nie zenitový!)</td></tr>
 <tr><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;">Lokalita</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;font-weight:700;">Alpnach, CH</td><td style="padding:7px 12px;border-bottom:1px solid #e8eaf6;color:#666;">46.94° N, nadm. výška ~433 m</td></tr>
 <tr style="background:#f8f9ff;"><td style="padding:7px 12px;">Prístroj</td><td style="padding:7px 12px;font-weight:700;">SMP10 + CVF4</td><td style="padding:7px 12px;color:#666;">Kipp &amp; Zonen, ISO 9060 trieda 2</td></tr>
+<!-- &amp; = HTML entita pre znak & (ampersand); priame použitie & by porušilo HTML syntax -->
 </tbody>
 </table>
+<!-- /tabuľka doplňujúcich štatistík -->
 
+<!-- Žltý informačný box s distribúciou skupín chýb a dátumami chýbajúcich dní -->
+<!-- border-left:4px solid #fbc02d = žltá zvislá čiara na ľavom okraji (žltý "blockquote" štýl) -->
 <div style="background:#fff8e1;border-left:4px solid #fbc02d;padding:12px 16px;border-radius:0 8px 8px 0;font-size:10pt;">
 <strong>Chybové skupiny — distribúcia:</strong> 137×1, 7×2, 3×3, 1×4, 1×5, 1×8, 1×12 &nbsp;|&nbsp;
 <strong>Chýbajúce dni:</strong> 2018-03-31, 2018-08-31, 2018-09-01 až 09-06 &nbsp;|&nbsp;
@@ -115,16 +206,24 @@ h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bott
 </div>
 
 </div>
+<!-- /telo ťaháku -->
 </div>
+<!-- /celý rýchly ťahák kontajner -->
 
 <!-- ===== SLAJD 1 ===== -->
+<!-- Každý slajd používa rovnakú štruktúru: .slide-blok > .slide-hlavicka + .slide-telo -->
+<!-- .slide-hlavicka obsahuje .slide-num (číslo) a .slide-nazov (názov slajdu) -->
+<!-- .slide-telo obsahuje: .recap (súhrn slajdu), .sekcia-title (nadpis skupiny), .qa (Q&A páry), .pojmy (kľúčové pojmy) -->
 <div class="slide-blok">
 <div class="slide-hlavicka"><div class="slide-num">1</div><div class="slide-nazov">Titulný slajd</div></div>
 <div class="slide-telo">
+<!-- .recap = modrý box s krátkym súhrnom toho čo bolo na slajde prezentácie -->
 <div class="recap"><strong>Na slajde:</strong> Názov projektu, predmet MKR, 25 600 vzoriek, 18 parametrov, 2026.</div>
 
+<!-- .sekcia-title = sivý nadpis skupiny otázok (VERZÁLKY + spodná čiara) -->
 <div class="sekcia-title">Úvodné otázky</div>
 
+<!-- .qa = karta jednej Q&A dvojice; .qa-q = otázka (modrá), .qa-a = odpoveď (biela s "A:" prefixom) -->
 <div class="qa"><div class="qa-q">Čo je cieľom tohoto projektu?</div>
 <div class="qa-a">Vykonať základnú štatistickú analýzu meteorologickej dátovej sady — identifikovať chyby v dátach, odstrániť ich, vizualizovať slnečné žiarenie v čase a kvantifikovať vzájomné závislosti medzi meranými parametrami pomocou korelačnej analýzy. Výstupom je vyčistená dátová sada, sada grafov a prenosný HTML report.</div></div>
 
@@ -153,6 +252,7 @@ h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bott
 
 <div class="qa"><div class="qa-q">Prečo ste najprv čistili dáta a až potom analyzovali?</div>
 <div class="qa-a">Poradie je zámerné: štatistiky, korelácie a grafy vypočítané zo surových dát by boli skreslené fyzikálne chybnými hodnotami. Napríklad záporné hodnoty žiarenia (−0.63 W/m²) by znížili priemer, a extrémne hodnoty mimo fyzikálnych medzí by deformovali korelácie.
+<!-- .poznamka = zelený box s doplňujúcou poznámkou alebo praktickým tipom -->
 <div class="poznamka">V praxi sa analýza robí v dvoch kolách: raz na raw dátach (identifikácia problémov), raz na cleaned dátach (výsledné štatistiky). Tu sme robili analýzu na raw dátach so zámerom ukázať surový stav.</div></div></div>
 
 </div></div>
@@ -176,11 +276,13 @@ h1.page-title { text-align: center; font-size: 15pt; color: #1a237e; margin-bott
 <li>Korelácia s Irradiance: <strong>r = +0.790 (pozitívna)</strong>. Pre štandardný zenitový uhol by bola závislosť negatívna (čím vyšší zenitový uhol = slnko nižšie = menej žiarenia). Tu je závislosť kladná: vyšší SunZenith → viac žiarenia → ide o elevačný uhol.</li>
 <li>Na 46.94° N (Alpnach) dosahuje slnko maximálnu výšku ~66.5° v lete — čo presne zodpovedá maximu v datasete.</li>
 </ul>
+<!-- .varovanie = oranžový box upozorňujúci na zákerné chyby a "pasti" v dátach -->
 <div class="varovanie">Pozor: v kóde FYZIKALNE_MEDZE je definovaný rozsah (0, 90)°, čo flaguje záporné hodnoty ako poškodené. Ide o správne správanie — záporný elevačný uhol fyzikálne neexistuje.</div></div></div>
 
 <div class="qa"><div class="qa-q">Prečo sú SunLatitude a SunLongitude vylúčené z korelačnej analýzy?</div>
 <div class="qa-a">SunLatitude a SunLongitude sú zemepisné súradnice stanice — konštanty, ktoré sa počas celého merania nemenia (stanica stojí na jednom mieste). Ich štandardná odchýlka = 0.
 <br><br>Pearsonov korelačný koeficient je definovaný ako:
+<!-- .formula = žltý blok pre matematický vzorec (monospace font, ohraničenie) -->
 <div class="formula">r = Cov(X, Y) / (std(X) · std(Y))</div>
 Ak std(X) = 0 (konštanta), dochádza k deleniu nulou → hodnota r je matematicky nedefinovaná (NaN). pandas automaticky vráti NaN pre takéto stĺpce, PyTorch by vyhodil chybu delenia nulou.</div></div>
 
@@ -217,6 +319,7 @@ Malá variabilita (nie nulová) odráža reálne fyzikálne výkyvy (napätie na
 
 <div class="qa"><div class="qa-q">Ako ste parsovali DateTime — čo je ten #frame_number a prečo format='mixed'?</div>
 <div class="qa-a">Surový CSV má DateTime v tvare: <code>2022-01-01 00:00:00#1</code> — štandardný dátumový formát plus prípona <code>#číslo_vzorky</code>.
+<!-- pre = blok kódu (viacriadkový); zachováva biele znaky, monospace font, vodorovný scroll -->
 <pre>
 # Krok 1: odstrihnutie prípony #frame
 df['DateTime'] = df['DateTime'].str.split('#').str[0]
@@ -229,6 +332,7 @@ df['DateTime'] = pd.to_datetime(df['DateTime'], format='mixed', dayfirst=False)
 <br><br><strong>Prečo <code>dayfirst=False</code>?</strong> Tento parameter hovorí pandas, že pri nejednoznačných dátumoch (napr. "01/02/03") má deň byť na KONCI (americký formát MM/DD/YY), nie na začiatku. Pre náš ISO formát (YYYY-MM-DD) je to bezpredmetné, ale je dobrá prax to explicitne nastaviť.
 <div class="poznamka">Keby sme vynechali <code>str.split('#').str[0]</code>, pandas by nedokázal parsovať dátum a vrátil by NaT (Not a Time) pre všetky záznamy.</div></div></div>
 
+<!-- .pojmy = flexbox obal; .pojem = chip/badge s kľúčovým pojmom (tmavomodrá, zaoblený) -->
 <div class="pojmy"><span class="pojem">Pyranometer</span><span class="pojem">ISO 9060</span><span class="pojem">CVF4</span><span class="pojem">Elevačný uhol</span><span class="pojem">Zenitový uhol</span><span class="pojem">Pearson – delenie nulou</span><span class="pojem">Teplotná kompenzácia</span><span class="pojem">TiltAngle</span><span class="pojem">format='mixed'</span></div>
 </div></div>
 
@@ -281,6 +385,7 @@ b64_string = base64.b64encode(data).decode('utf-8')
 # Vloženie do HTML
 &lt;img src="data:image/png;base64,{b64_string}"&gt;
 </pre>
+<!-- &lt; a &gt; = HTML entity pre znaky < a > (aby sa nezamieňali s HTML tagmi) -->
 <strong>Prečo?</strong> Self-contained HTML súbor — nezávisí od externých súborov. Môžeme ho presunúť, zdieľať emailom alebo otvoriť offline. Nevýhoda: väčší súbor (~4.7 MB vs ~500 kB bez obrázkov).
 <div class="poznamka">Base64 kóduje binárne dáta (bajty 0–255) do ASCII znakov (64 povolených znakov). Každé 3 bajty → 4 znaky, takže veľkosť rastie o ~33%.</div></div></div>
 
@@ -288,6 +393,7 @@ b64_string = base64.b64encode(data).decode('utf-8')
 
 <div class="qa"><div class="qa-q">Popíšte krok po kroku čo robí main.py keď ho spustíme.</div>
 <div class="qa-a">
+<!-- ol = číslovaný zoznam (ordered list); style="margin-left:20px;line-height:2." = odsadenie a riadkovanie -->
 <ol style="margin-left:20px;line-height:2;">
 <li><strong>Načítanie dát</strong> — <code>nacitaj_data(CSV_SUBOR)</code> z <code>nacitanie_dat.py</code>: prečíta CSV, odreže <code>#frame</code> z DateTime, parsuje datetime, pridá pomocné stĺpce Date/Hour/Month/DayOfYear.</li>
 <li><strong>Základné štatistiky</strong> — <code>vypis_zakladne_statistiky(df)</code> z <code>statistiky.py</code>: zavolá <code>df.describe()</code>, vypíše count/mean/std/min/percentily/max pre 18 parametrov. Výstup sa zachytí cez <code>redirect_stdout</code>.</li>
@@ -442,6 +548,7 @@ Hodnoty pochádzajú z: (a) datasheetu meracích prístrojov (SMP10, CVF4), (b) 
 <li><strong>Fyzikálna nezávislosť</strong> — hranice nie sú odvodené zo samotných dát (čo by ich robilo cirkulárnymi), ale z fyzikálnych zákonov a parametrov prístroja. Tlak 2000 hPa je fyzikálne nemožný bez ohľadu na to, čo hovorí distribúcia dát.</li>
 <li><strong>Interpretovateľnosť</strong> — každá zamietnutá vzorka má jasné fyzikálne zdôvodnenie, nie len "štatisticky odľahlá".</li>
 </ol>
+<!-- &gt; = HTML entita pre znak > (väčší ako); &lt; pre < (menší ako); nutné aby nezlomili HTML -->
 <div class="varovanie">Z-score: hodnota je outlier ak |( x − μ) / σ| &gt; 3. Pre žiarenie: μ=286.6, σ=282.0 → spodná hranica = 286.6 − 3×282 = −560 W/m². Teda z-score by NEODHALIL záporné žiarenie −0.63 W/m² ako problém.</div></div></div>
 
 <div class="qa"><div class="qa-q">Ako funguje detekcia — aký algoritmus?</div>
@@ -587,6 +694,7 @@ Distribúcia je bimodálna:
 <li>Druhý zhluk pri 300–900 W/m² — denné záznamy</li>
 </ul>
 Percentily odrážajú túto štruktúru:
+<!-- Inline štýl: šedý podklad s monospace fontom pre tabuľku percentílov -->
 <div style="background:#f8f9ff;border:1px solid #e0e3ff;border-radius:6px;padding:10px 14px;font-family:Consolas,monospace;font-size:9pt;margin:8px 0;">
 25% = 53 W/m²  → bod kde 25% záznamov je nižších; zahŕňa veľa nočných núl<br>
 50% = 175.9 W/m² → medián; práve na hranici noc/deň<br>
@@ -649,6 +757,7 @@ Každý bod v grafe = priemer žiarenia napr. v januári o 12:00 hodine, vypoč�
 
 <div class="qa"><div class="qa-q">Čo je Pearsonov korelačný koeficient — vzorec a interpretácia?</div>
 <div class="qa-a">Pearsonov r meria silu a smer <strong>lineárnej závislosti</strong> dvoch premenných:
+<!-- .formula = žltý blok s matematickým vzorcom Pearsonovho korelačného koeficienta -->
 <div class="formula">r(X, Y) = Cov(X, Y) / (σ_X · σ_Y) = Σ(xᵢ−x̄)(yᵢ−ȳ) / (‖x−x̄‖ · ‖y−ȳ‖)</div>
 <ul>
 <li><strong>r = +1</strong> — dokonalá kladná lineárna závislosť (y rastie keď x rastie)</li>
@@ -804,6 +913,9 @@ Spearman by bol lepší keby: dáta obsahovali ordinálne hodnoty, závislosť b
 
 <div class="pojmy"><span class="pojem">Confounder</span><span class="pojem">ACF</span><span class="pojem">Parciálna korelácia</span><span class="pojem">Limitations</span><span class="pojem">Self-contained HTML</span></div>
 </div></div>
+<!-- /koniec posledného slajdu (12) -->
 
 </body>
+<!-- /body = koniec viditeľného obsahu stránky -->
 </html>
+<!-- /html = koniec celého HTML dokumentu -->

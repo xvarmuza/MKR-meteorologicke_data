@@ -37,8 +37,8 @@ OUTPUT = 'output_analyza_train_raw'              # Adresár, kam sa uložia výs
 os.makedirs(OUTPUT, exist_ok=True)   # Vytvoríme výstupný adresár ak ešte neexistuje
 
 # ---- 1. Načítanie dát ----
-df = nacitaj_data(CSV)   # Načítame CSV a pripravíme DataFrame
-print(f"Načítaných {len(df):,} vzoriek z {df['Date'].nunique()} dní.")
+df = nacitaj_data(CSV)   # Načítame CSV a pripravíme DataFrame (DateTime, Date, Hour, Month, DayOfYear)
+print(f"Načítaných {len(df):,} vzoriek z {df['Date'].nunique()} dní.")   # Informatívny výpis: počet riadkov a počet unikátnych dní
 
 # ---- 2. Súhrnné štatistiky ----
 suhrne_statistiky(df, OUTPUT)   # Vypočítame min, max, priemer, std pre každý parameter
@@ -64,9 +64,9 @@ generuj_html_report(CSV, OUTPUT)   # Zostavíme jeden prenosný HTML súbor so v
 
 
 # ---- Záverečný výpis vygenerovaných súborov ----
-print(f"\n{'=' * 50}")
-print(f"  HOTOVO – výstup v adresári: {OUTPUT}/")
-print(f"{'=' * 50}")
-for subor in sorted(os.listdir(OUTPUT)):   # Iterujeme cez všetky súbory vo výstupnom adresári
-    velkost = os.path.getsize(os.path.join(OUTPUT, subor)) / 1024   # Veľkosť v kB
-    print(f"  {subor:45s} ({velkost:.0f} kB)")   # Vypíšeme názov a veľkosť
+print(f"\n{'=' * 50}")                              # Vizuálny oddeľovač (50 znakov '=')
+print(f"  HOTOVO – výstup v adresári: {OUTPUT}/")   # Záverečná správa s cestou k výstupnému adresáru
+print(f"{'=' * 50}")                              # Uzatvárajúci oddeľovač
+for subor in sorted(os.listdir(OUTPUT)):   # Iterujeme cez všetky súbory vo výstupnom adresári (zoradené abecedne)
+    velkost = os.path.getsize(os.path.join(OUTPUT, subor)) / 1024   # os.path.getsize vráti bajty; delíme 1024 = kB
+    print(f"  {subor:45s} ({velkost:.0f} kB)")   # Zarovnaný výpis: názov súboru (45 znakov) + veľkosť v kB

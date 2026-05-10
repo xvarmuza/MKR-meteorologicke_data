@@ -255,40 +255,40 @@ def vycisti_a_uloz(df, output_dir):
 
     Vracia: vyčistený DataFrame
     """
-    print("\n=== ČISTENIE DÁT A ULOŽENIE CLEANED.CSV ===")
+    print("\n=== ČISTENIE DÁT A ULOŽENIE CLEANED.CSV ===")   # Nadpis sekcie pre čitateľnosť výstupu
 
-    sledovane = list(FYZIKALNE_MEDZE.keys())
+    sledovane = list(FYZIKALNE_MEDZE.keys())   # Zoznam všetkých sledovaných parametrov (kľúče zo slovníka fyzikálnych medzi)
 
     # --- Maska chýbajúcich hodnôt (NaN) ---
-    sledovane_pritomne = [s for s in sledovane if s in df.columns]
-    maska_nan = df[sledovane_pritomne].isnull().any(axis=1)
+    sledovane_pritomne = [s for s in sledovane if s in df.columns]   # Len stĺpce, ktoré reálne existujú v DataFrame (obrana pred chýbajúcimi stĺpcami)
+    maska_nan = df[sledovane_pritomne].isnull().any(axis=1)   # True ak má riadok aspoň jednu NaN; .any(axis=1) = porovnanie po riadkoch
 
     # --- Maska hodnôt mimo fyzikálnych medzi ---
-    maska_poskodene = pd.Series(False, index=df.index)
-    for stlpec, (min_val, max_val) in FYZIKALNE_MEDZE.items():
-        if stlpec not in df.columns:
-            continue
-        mimo = ((df[stlpec] < min_val) | (df[stlpec] > max_val)) & df[stlpec].notna()
-        maska_poskodene = maska_poskodene | mimo
+    maska_poskodene = pd.Series(False, index=df.index)   # Inicializácia masky poškodených riadkov: začíname s False pre každý riadok
+    for stlpec, (min_val, max_val) in FYZIKALNE_MEDZE.items():   # Iterujeme: stlpec = názov parametra, min_val/max_val = povolený rozsah
+        if stlpec not in df.columns:   # Ak tento stĺpec v dátach neexistuje (napr. chýba v CSV)
+            continue                   # Preskočíme ho a pokračujeme na ďalší parameter
+        mimo = ((df[stlpec] < min_val) | (df[stlpec] > max_val)) & df[stlpec].notna()   # True: hodnota je pod min ALEBO nad max, a zároveň nie je NaN
+        maska_poskodene = maska_poskodene | mimo   # OR: riadok je poškodený ak má aspoň jednu hodnotu mimo medzi v akomkoľvek stĺpci
 
     # --- Kombinovaná maska a štatistiky ---
-    maska_chybnych = maska_nan | maska_poskodene
-    print(f"  Riadkov pred čistením:                     {len(df):,}")
-    print(f"  Riadky s chýbajúcimi hodnotami (NaN):      {maska_nan.sum():,}")
-    print(f"  Riadky s hodnotami mimo fyzikálnych medzi: {maska_poskodene.sum():,}")
-    print(f"  Celkovo chybných riadkov (union):           {maska_chybnych.sum():,}")
+    maska_chybnych = maska_nan | maska_poskodene   # OR: riadok je chybný ak má NaN (maska_nan) ALEBO hodnotu mimo medzi (maska_poskodene)
+    print(f"  Riadkov pred čistením:                     {len(df):,}")                   # Výpis: celkový počet riadkov pred čistením (:, = formátovanie s oddeľovačom tisícov)
+    print(f"  Riadky s chýbajúcimi hodnotami (NaN):      {maska_nan.sum():,}")           # Výpis: počet riadkov s aspoň jednou NaN hodnotou
+    print(f"  Riadky s hodnotami mimo fyzikálnych medzi: {maska_poskodene.sum():,}")     # Výpis: počet riadkov s hodnotou mimo fyzikálnych medzi
+    print(f"  Celkovo chybných riadkov (union):           {maska_chybnych.sum():,}")     # Výpis: celkový počet chybných riadkov (OR oboch masiek; môže byť menej než súčet)
 
     # --- Odstránenie chybných riadkov ---
-    df_clean = df[~maska_chybnych].reset_index(drop=True)
-    print(f"  Riadkov po čistení:                        {len(df_clean):,}")
+    df_clean = df[~maska_chybnych].reset_index(drop=True)   # ~ = negácia masky; vyberieme len dobré riadky; reset_index = nové poradové čísla od 0
+    print(f"  Riadkov po čistení:                        {len(df_clean):,}")   # Výpis: počet zostávajúcich riadkov po čistení
 
     # --- Uloženie do cleaned.csv do výstupného adresára (OUTPUT) ---
-    cesta_cleaned = os.path.join(output_dir, 'cleaned.csv')
+    cesta_cleaned = os.path.join(output_dir, 'cleaned.csv')   # Zostavíme cestu: output_dir + 'cleaned.csv' (bezpečné na Windows aj Linux)
 
-    # Ukladáme len pôvodné stĺpce CSV (bez pomocných DateTime stĺpcov pridaných pri načítaní)
-    pomocne_stlpce = ['Date', 'Hour', 'Month', 'DayOfYear']
-    stlpce_csv = [s for s in df_clean.columns if s not in pomocne_stlpce]
-    df_clean[stlpce_csv].to_csv(cesta_cleaned, index=False)
+    # Ukladáme len pôvodné stĺpce z CSV (bez pomocných stĺpcov Date, Hour, Month, DayOfYear, ktoré sme pridali pri načítaní)
+    pomocne_stlpce = ['Date', 'Hour', 'Month', 'DayOfYear']   # Zoznam pomocných stĺpcov pridaných funkciou nacitaj_data
+    stlpce_csv = [s for s in df_clean.columns if s not in pomocne_stlpce]   # Všetky stĺpce okrem pomocných = originálne stĺpce z CSV
+    df_clean[stlpce_csv].to_csv(cesta_cleaned, index=False)   # Uložíme do CSV; index=False = neukladáme číselný index riadkov
 
-    print(f"  Uložené: {cesta_cleaned}  ({os.path.getsize(cesta_cleaned) / 1024:.0f} kB)")
-    return df_clean
+    print(f"  Uložené: {cesta_cleaned}  ({os.path.getsize(cesta_cleaned) / 1024:.0f} kB)")   # Potvrdenie uloženia s veľkosťou súboru v kB
+    return df_clean   # Vrátime vyčistený DataFrame pre použitie v ďalšej analýze (ročná analýza, korelácie)

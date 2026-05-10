@@ -2,25 +2,27 @@
 # MODUL: Generovanie HTML reportu zo všetkých analýz
 # ==============================================================
 
-import os            # Práca so súborovým systémom (cesty, kontrola existencie súborov)
-import io            # In-memory textový buffer pre zachytávanie výstupu
-import base64        # Kódovanie obrázkov priamo do HTML (self-contained súbor)
-import contextlib    # Zachytávanie výstupu funkcií (redirect_stdout)
-import pandas as pd  # Načítanie CSV so štatistikami a tvorba HTML tabuliek
+import os            # Práca so súborovým systémom (cesty, kontrola existencie súborov, veľkosť)
+import io            # In-memory textový buffer (StringIO) pre zachytávanie výstupu funkcií
+import base64        # Kódovanie binárnych obrázkov do base64 textu pre vloženie priamo do HTML
+import contextlib    # Nástroje pre správu kontextu – redirect_stdout na presmerovanie výstupu
+import pandas as pd  # Načítanie CSV so štatistikami a konverzia DataFrame na HTML tabuľku
 
-# Naše analytické moduly
-from nacitanie_dat     import nacitaj_data
-from analyza_chyb      import (analyza_chybajucich_dni, analyza_chybajucich_vzoriek,
-                                detekcia_poskodennych_vzoriek, histogramy_dlzok_chyb)
-from analyza_ziarenia  import rocna_analyza_ziarenia, denna_analyza_pre_mesiace
-from analyza_korelacie import korelacie_parametrov, suhrne_statistiky
+# Naše analytické moduly – importujeme funkcie, ktoré spustíme v reporte
+from nacitanie_dat     import nacitaj_data                    # Načítanie a príprava DataFrame zo CSV
+from analyza_chyb      import (analyza_chybajucich_dni,       # Analýza chýbajúcich dní
+                                analyza_chybajucich_vzoriek,  # Počítanie NaN hodnôt
+                                detekcia_poskodennych_vzoriek, # Detekcia hodnôt mimo fyzikálnych medzi
+                                histogramy_dlzok_chyb)         # Histogramy dĺžok skupín chýb
+from analyza_ziarenia  import rocna_analyza_ziarenia, denna_analyza_pre_mesiace   # Analýzy žiarenia
+from analyza_korelacie import korelacie_parametrov, suhrne_statistiky             # Korelácie a štatistiky
 
+# Fyzikálne medze importujeme z analyza_chyb – jediné miesto definície (Single Source of Truth)
+from analyza_chyb import FYZIKALNE_MEDZE   # Slovník: stĺpec → (min, max) povolený rozsah
 
-# Fyzikálne medze – importujeme z analyza_chyb (jediné miesto definície)
-from analyza_chyb import FYZIKALNE_MEDZE
-
-# Stĺpce zobrazené v tabuľke poškodených vzoriek: DateTime + všetky sledované stĺpce
-ZOBRAZIT_STLPCE = ['DateTime'] + list(FYZIKALNE_MEDZE.keys())
+# Stĺpce zobrazované v tabuľke poškodených vzoriek v HTML reporte:
+# DateTime (časová značka) + všetky stĺpce, pre ktoré máme fyzikálne medze
+ZOBRAZIT_STLPCE = ['DateTime'] + list(FYZIKALNE_MEDZE.keys())   # list() konvertuje dict_keys na zoznam
 
 
 # ==============================================================
@@ -29,69 +31,81 @@ ZOBRAZIT_STLPCE = ['DateTime'] + list(FYZIKALNE_MEDZE.keys())
 
 def zachyt_vystup(funkcia, *args, **kwargs):
     """
-    Spustí funkciu a zachytí všetok jej textový výstup (print) do reťazca.
-    Vracia: (návratová_hodnota, zachytený_text)
+    Spustí ľubovoľnú funkciu a zachytí celý jej textový výstup (print) do reťazca.
+    Tým sa výpisy nevypíšu do terminálu, ale uložia sa do premennej pre HTML report.
+
+    Parametre:
+        funkcia  – funkcia, ktorú chceme spustiť (napr. suhrne_statistiky)
+        *args    – pozicinálne argumenty, ktoré sa odovzdajú funkcii
+        **kwargs – kľúčové argumenty, ktoré sa odovzdajú funkcii
+
+    Vracia: dvojicu (návratová_hodnota_funkcie, zachytený_text_ako_string)
     """
-    buffer = io.StringIO()                          # Dočasný textový buffer
-    with contextlib.redirect_stdout(buffer):        # Presmerujeme stdout do buffra
-        vysledok = funkcia(*args, **kwargs)         # Spustíme funkciu
-    return vysledok, buffer.getvalue()              # Vrátime výsledok + zachytený text
+    buffer = io.StringIO()                          # Vytvoríme prázdny in-memory textový buffer (ako súbor v pamäti)
+    with contextlib.redirect_stdout(buffer):        # Presmerujeme štandardný výstup (print) do buffra namiesto terminálu
+        vysledok = funkcia(*args, **kwargs)         # Spustíme funkciu – všetky jej print() sa zapíšu do buffra
+    return vysledok, buffer.getvalue()              # Vrátime: návratovú hodnotu funkcie + celý zachytený text
 
 
 def tabulka_poskodennych(df):
     """
-    Nájde všetky poškodené vzorky (mimo fyzikálnych medzi) a vráti HTML tabuľku.
-    Chybné hodnoty sú červeno zvýraznené, ostatné bunky sú normálne.
+    Nájde všetky poškodené vzorky (hodnoty mimo fyzikálnych medzi) v DataFrame
+    a vráti HTML reťazec s tabuľkou. Chybné bunky sú červeno zvýraznené.
+    Pri podržaní myši (tooltip) sa zobrazí povolený rozsah hodnôt.
+
+    Parametre:
+        df – pandas DataFrame s meteorologickými dátami (celý, nefiltrovaný)
+
+    Vracia: HTML reťazec (str) s tabuľkou alebo správou o absencii chýb
     """
-    # Nájdeme masku poškodených riadkov a pre každý stĺpec masku mimo medzi
-    riadky_maska  = pd.Series(False, index=df.index)   # Celková maska poškodených riadkov (OR všetkých stĺpcov)
-    stlpce_chyby  = {s: pd.Series(False, index=df.index) for s in FYZIKALNE_MEDZE}   # Maska chýb pre každý stĺpec zvlášť
+    # Inicializácia celkovej masky (True = riadok je poškodený) a slovníka masiek pre každý stĺpec.
+    riadky_maska  = pd.Series(False, index=df.index)   # Začíname: žiadny riadok nie je poškodený (všetko False)
+    stlpce_chyby  = {s: pd.Series(False, index=df.index) for s in FYZIKALNE_MEDZE}   # Pre každý stĺpec vlastná maska chýb
 
-    for stlpec, (mn, mx) in FYZIKALNE_MEDZE.items():   # Pre každý sledovaný stĺpec s jeho medzami
-        if stlpec not in df.columns:   # Preskočíme stĺpce, ktoré v dátach nie sú
-            continue
-        mimo = ((df[stlpec] < mn) | (df[stlpec] > mx)) & df[stlpec].notna()   # Hodnoty mimo medzi (NaN ignorujeme)
-        stlpce_chyby[stlpec] = mimo    # Uložíme masku chýb pre tento stĺpec
-        riadky_maska = riadky_maska | mimo   # Pridáme do celkovej masky (riadok je chybný ak má aspoň jednu chybu)
+    for stlpec, (mn, mx) in FYZIKALNE_MEDZE.items():   # Iterujeme: stlpec = názov stĺpca, mn = minimum, mx = maximum
+        if stlpec not in df.columns:   # Ak stĺpec v dátach neexistuje (napr. chýba v CSV), preskočíme
+            continue                   # Pokračujeme na ďalší parameter v slovníku
+        mimo = ((df[stlpec] < mn) | (df[stlpec] > mx)) & df[stlpec].notna()   # Hodnota je mimo medzi A zároveň nie je NaN
+        stlpce_chyby[stlpec] = mimo    # Uložíme masku chýb pre tento konkrétny stĺpec (pre zvýraznenie bunky)
+        riadky_maska = riadky_maska | mimo   # OR: riadok je chybný, ak má aspoň jednu hodnotu mimo medzi
 
-    # Vyberieme len poškodené riadky a len zobrazované stĺpce
-    dostupne = [s for s in ZOBRAZIT_STLPCE if s in df.columns]   # Stĺpce, ktoré skutočne existujú v dátach
-    df_chyby = df[riadky_maska][dostupne].copy()   # Vyfiltrujeme len chybné riadky
+    # Vyberieme len poškodené riadky a len stĺpce, ktoré chceme zobraziť v tabuľke
+    dostupne = [s for s in ZOBRAZIT_STLPCE if s in df.columns]   # Stĺpce, ktoré reálne existujú v dátach (obrana pred chýbajúcimi stĺpcami)
+    df_chyby = df[riadky_maska][dostupne].copy()   # Vyfiltrujeme poškodené riadky; .copy() zabraňuje SettingWithCopyWarning
 
-    if df_chyby.empty:
-        return '<p style="color:#2e7d32; font-weight:600;">✓ Žiadne poškodené vzorky nenájdené.</p>'
+    if df_chyby.empty:   # Ak DataFrame neobsahuje žiadne poškodené riadky
+        return '<p style="color:#2e7d32; font-weight:600;">&#10003; Žiadne poškodené vzorky nenájdené.</p>'   # Zelená správa o úspechu
 
-    # Zostavenie HTML tabuľky ručne – aby sme vedeli zvýrazniť konkrétne bunky
-    hlavicka = ''.join(f'<th>{s}</th>' for s in dostupne)   # HTML hlavička tabuľky zo zoznamu stĺpcov
-    riadky_html = []   # Zoznam HTML reťazcov pre každý riadok tabuľky
+    # Zostavenie HTML tabuľky ručne (nie cez pandas .to_html()) – potrebujeme zvýrazniť konkrétne bunky
+    hlavicka = ''.join(f'<th>{s}</th>' for s in dostupne)   # HTML hlavička: pre každý stĺpec jeden <th> element
+    riadky_html = []   # Zoznam HTML reťazcov (jeden prvok = jeden <tr>...</tr> riadok tabuľky)
 
-    for idx, row in df_chyby.iterrows():   # Iterujeme cez každý poškodený riadok
-        bunky = []   # Zoznam HTML buniek pre aktuálny riadok
-        for stlpec in dostupne:   # Iterujeme cez každý zobrazovaný stĺpec
-            hodnota = row[stlpec]   # Hodnota tejto bunky
-            # Skontrolujeme, či je táto konkrétna bunka mimo medze
-            je_chybna = (stlpec in stlpce_chyby) and stlpce_chyby[stlpec].get(idx, False)
+    for idx, row in df_chyby.iterrows():   # Iterujeme cez poškodené riadky: idx = index v pôvodnom DataFrame, row = riadok
+        bunky = []   # Zoznam HTML buniek (<td>...</td>) pre aktuálny riadok
+        for stlpec in dostupne:   # Pre každý zobrazovaný stĺpec
+            hodnota = row[stlpec]   # Hodnota konkrétnej bunky (môže byť float, str, datetime)
+            # Skontrolujeme, či je práve táto bunka (stĺpec × riadok) mimo fyzikálnych medzi
+            je_chybna = (stlpec in stlpce_chyby) and stlpce_chyby[stlpec].get(idx, False)   # .get(idx, False) = bezpečné čítanie (ak idx chýba, vráti False)
 
-            if je_chybna:
-                # Červená bunka s hodnotou a povoleným rozsahom v tooltipe
-                mn, mx = FYZIKALNE_MEDZE[stlpec]   # Načítame povolené medze pre tento stĺpec
+            if je_chybna:   # Bunka obsahuje hodnotu mimo fyzikálneho rozsahu – zvýrazníme červenou
+                mn, mx = FYZIKALNE_MEDZE[stlpec]   # Načítame povolené medze pre tento stĺpec (pre tooltip)
                 bunky.append(
                     f'<td class="chybna-bunka" title="Povolený rozsah: [{mn}, {mx}]">'
-                    f'{hodnota}</td>'   # Bunka s červeným štýlom a tooltipom
+                    f'{hodnota}</td>'   # Bunka: trieda CSS "chybna-bunka" = červené pozadie; title = tooltip pri hover
                 )
-            else:
-                # Normálna bunka
-                if isinstance(hodnota, float):   # Číselné hodnoty zaokrúhlíme na 4 desatinné miesta
-                    bunky.append(f'<td>{hodnota:.4f}</td>')
+            else:   # Bunka je v poriadku – normálne zobrazenie
+                if isinstance(hodnota, float):   # Ak je hodnota desatinné číslo (float)
+                    bunky.append(f'<td>{hodnota:.4f}</td>')   # Zaokrúhlíme na 4 desatinné miesta pre prehľadnosť
                 else:
-                    bunky.append(f'<td>{hodnota}</td>')   # Ostatné hodnoty (napr. dátum) bez formátovania
+                    bunky.append(f'<td>{hodnota}</td>')   # Ostatné typy (str, datetime) zobrazíme bez formátovania
 
-        riadky_html.append(f'<tr>{"".join(bunky)}</tr>')   # Zostavíme celý riadok tabuľky
+        riadky_html.append(f'<tr>{"".join(bunky)}</tr>')   # Zostavíme celý riadok tabuľky zo zoznamu buniek
 
+    # Vrátime kompletný HTML blok s tabuľkou poškodených vzoriek
     return f"""
     <p style="margin-bottom:12px; color:#555;">
       Zobrazených <strong>{len(df_chyby)}</strong> poškodených vzoriek.
-      <span style="color:#c62828;">■</span> Červená bunka = hodnota mimo fyzikálneho rozsahu
+      <span style="color:#c62828;">&#9632;</span> Červená bunka = hodnota mimo fyzikálneho rozsahu
       (podržte myš pre zobrazenie povoleného rozsahu).
     </p>
     <div style="overflow-x:auto;">
@@ -104,49 +118,54 @@ def tabulka_poskodennych(df):
 
 def obrazok_na_base64(cesta):
     """
-    Načíta PNG obrázok a zakóduje ho do base64 reťazca.
-    Výsledok môžeme vložiť priamo do HTML ako <img src="data:image/png;base64,...">
-    Výhodou je, že HTML je samostatný súbor bez externých závislostí.
+    Načíta PNG obrázok zo súborového systému a zakóduje ho do base64 reťazca.
+    Výsledok sa vloží priamo do HTML ako: <img src="data:image/png;base64,...">
+    Výhodou je self-contained HTML súbor – nevyžaduje externé obrázky.
+
+    Parametre:
+        cesta – reťazec, absolútna alebo relatívna cesta k PNG súboru
+
+    Vracia: base64 reťazec (str) alebo None ak súbor neexistuje
     """
-    if not os.path.exists(cesta):
-        return None
-    with open(cesta, 'rb') as f:          # Čítame binárne (rb = read binary)
-        data = f.read()
-    return base64.b64encode(data).decode('utf-8')   # Kódujeme a dekódujeme na string
+    if not os.path.exists(cesta):   # Skontrolujeme, či súbor skutočne existuje na disku
+        return None                 # Ak nie, vrátime None (volajúci kód to ošetrí)
+    with open(cesta, 'rb') as f:   # Otvoríme súbor v binárnom móde ('rb' = read binary) – PNG je binárny formát
+        data = f.read()            # Načítame celý obsah súboru ako bytes objekt
+    return base64.b64encode(data).decode('utf-8')   # b64encode() = zakódujeme bytes na base64 bytes; .decode() = konverzia na Python str
 
 
 def text_na_html(text):
     """
-    Konvertuje zachytený textový výstup na formátovaný HTML blok.
-    Zachováva odsadenie, zvýrazní riadky so štatistikami.
+    Konvertuje zachytený textový výstup (print výstupy analýz) na formátovaný HTML blok.
+    Rôzne typy riadkov dostanú rôzne CSS triedy pre vizuálne odlíšenie.
+
+    Parametre:
+        text – reťazec (str) so zachyteným textovým výstupom funkcie
+
+    Vracia: HTML reťazec (str) pripravený na vloženie do <div class="vystup-text">
     """
-    riadky = []   # Zoznam HTML riadkov výsledného bloku
-    for riadok in text.strip().split('\n'):   # Rozdelíme text na jednotlivé riadky
-        # Prázdny riadok
-        if not riadok.strip():   # Prázdny riadok → vložíme zalomenie riadku
-            riadky.append('<br>')
-            continue
-        # Nadpis sekcie (riadky s ===)
-        if riadok.strip().startswith('==='):   # Riadok je nadpis sekcie (obalený ===)
-            obsah = riadok.strip().strip('=').strip()   # Odoberieme znaky = a biele znaky
-            riadky.append(f'<div class="sekcia-nadpis">{obsah}</div>')   # Nadpis sekcie
-        # Oddeľovač (===, ---)
-        elif set(riadok.strip()) <= set('=-'):   # Riadok pozostáva len z = a - znakov
-            continue   # Preskočíme čistý oddeľovač
-        # Riadok s číselnou hodnotou (obsahuje : a číslicu)
-        elif ':' in riadok and any(c.isdigit() for c in riadok):   # Riadok obsahuje kľúč: hodnota
-            cast = riadok.split(':', 1)   # Rozdelíme na kľúč a hodnotu (len pri prvej dvojbodke)
+    riadky = []   # Zoznam HTML reťazcov – jeden prvok za každý vstupný riadok
+    for riadok in text.strip().split('\n'):   # .strip() odstraňuje prázdne riadky na začiatku/konci; .split('\n') rozdelí na riadky
+        if not riadok.strip():   # Ak je riadok prázdny (len biele znaky alebo prázdny reťazec)
+            riadky.append('<br>')   # Vložíme HTML zalomenie riadku pre zachovanie vizuálnych medzier
+            continue                # Preskočíme zvyšok cyklu, pokračujeme na ďalší riadok
+        if riadok.strip().startswith('==='):   # Riadok začína '===' = ide o nadpis sekcie (napr. "=== ŠTATISTIKY ===")
+            obsah = riadok.strip().strip('=').strip()   # Odoberieme znaky '=' z oboch strán a biele znaky
+            riadky.append(f'<div class="sekcia-nadpis">{obsah}</div>')   # Zobrazíme ako tučný modrý nadpis
+        elif set(riadok.strip()) <= set('=-'):   # Riadok pozostáva VÝHRADNE zo znakov '=' a '-' = čistý oddeľovač
+            continue   # Preskočíme – vizuálne oddeľovače nepotrebujeme v HTML (máme CSS)
+        elif ':' in riadok and any(c.isdigit() for c in riadok):   # Riadok obsahuje ':' (kľúč: hodnota) A aspoň jednu číslicu (štatistika)
+            cast = riadok.split(':', 1)   # Rozdelíme len pri prvej dvojbodke (maxsplit=1), napr. ["  Priemer", " 345.6 W/m²"]
             riadky.append(
                 f'<div class="hodnota-riadok">'
-                f'<span class="kluc">{cast[0]}:</span>'   # Kľúč (parameter)
-                f'<span class="hodnota">{cast[1]}</span>'  # Hodnota (číslo / reťazec)
+                f'<span class="kluc">{cast[0]}:</span>'   # Ľavá časť = parameter/kľúč (šedý)
+                f'<span class="hodnota">{cast[1]}</span>' # Pravá časť = číslo/hodnota (modrá, tučná)
                 f'</div>'
             )
-        else:
-            # Obyčajný riadok
-            escaped = riadok.replace('<', '&lt;').replace('>', '&gt;')   # Escapujeme HTML znaky
-            riadky.append(f'<div class="info-riadok">{escaped}</div>')   # Bežný informačný riadok
-    return '\n'.join(riadky)   # Spojíme všetky HTML riadky do jedného reťazca
+        else:   # Obyčajný informatívny riadok (napr. "Graf uložený: ..." alebo "---")
+            escaped = riadok.replace('<', '&lt;').replace('>', '&gt;')   # Nahradíme HTML znaky '<' a '>' entitami (bezpečnosť – XSS prevencia)
+            riadky.append(f'<div class="info-riadok">{escaped}</div>')   # Zobrazíme ako bežný šedý riadok
+    return '\n'.join(riadky)   # Spojíme všetky HTML riadky do jedného reťazca oddelenými novým riadkom
 
 
 # ==============================================================
@@ -155,74 +174,87 @@ def text_na_html(text):
 
 def generuj_html_report(csv_subor, output_dir):
     """
-    Spustí celú analýzu, zachytí výstup a vygeneruje self-contained HTML report.
-    Obrázky sú vložené priamo do HTML ako base64 → jeden prenosný súbor.
+    Spustí celú analýzu, zachytí textový výstup a vygeneruje self-contained HTML report.
+    Obrázky sú vložené priamo do HTML ako base64 → výsledok je jeden prenosný .html súbor.
+
+    Parametre:
+        csv_subor  – reťazec, cesta k vstupnému CSV súboru s meteorologickými dátami
+        output_dir – reťazec, cesta k adresáru kde sú uložené grafy a kde sa uloží report.html
     """
-    print("\n=== GENEROVANIE HTML REPORTU ===")
+    print("\n=== GENEROVANIE HTML REPORTU ===")   # Nadpis sekcie
 
-    # Načítanie dát
-    print("  Načítavam dáta...")   # Informujeme o začatí načítavania
-    df = nacitaj_data(csv_subor)   # Načítame a pripravíme DataFrame zo CSV súboru
+    # --- Načítanie dát ---
+    print("  Načítavam dáta...")   # Informujeme používateľa o začatí načítavania
+    df = nacitaj_data(csv_subor)   # Načítame CSV a vrátime pripravený DataFrame (s DateTime, Date, Hour, Month, DayOfYear)
 
     # ----------------------------------------------------------
-    # Spustenie všetkých analýz so zachytením výstupu
+    # Spustenie všetkých analýz so zachytením textového výstupu
+    # Každá analýza sa spustí znova – výsledné texty idú do HTML.
+    # Grafy sa neukladajú znova (súbory PNG už existujú z main.py).
     # ----------------------------------------------------------
-    print("  Spúšťam analýzy...")   # Informujeme o začatí analýz
+    print("  Spúšťam analýzy...")   # Informujeme o začatí
 
-    _, txt_statistiky   = zachyt_vystup(suhrne_statistiky,           df, output_dir)   # Súhrnné štatistiky + uloženie CSV
-    _, txt_dni          = zachyt_vystup(analyza_chybajucich_dni,      df, output_dir)   # Analýza chýbajúcich dní
-    _, txt_nan          = zachyt_vystup(analyza_chybajucich_vzoriek,  df)               # Analýza NaN hodnôt
-    (poskodene, pravd), txt_poskodene = zachyt_vystup(                                  # Detekcia hodnôt mimo fyzikálnych medzi
-        detekcia_poskodennych_vzoriek, df
+    _, txt_statistiky   = zachyt_vystup(suhrne_statistiky,           df, output_dir)   # Súhrnné štatistiky: vracia (None, text)
+    _, txt_dni          = zachyt_vystup(analyza_chybajucich_dni,      df, output_dir)   # Chýbajúce dni: vracia (zoznam_dni, text)
+    _, txt_nan          = zachyt_vystup(analyza_chybajucich_vzoriek,  df)               # NaN analýza: vracia (None, text)
+    (poskodene, pravd), txt_poskodene = zachyt_vystup(                                  # Poškodené vzorky: vracia ((maska, pravd.), text)
+        detekcia_poskodennych_vzoriek, df                                               # Rozbalíme dvojicu (poskodene, pravd) z návratovej hodnoty
     )
     _, txt_dlzky        = zachyt_vystup(histogramy_dlzok_chyb,        df, poskodene, output_dir)   # Histogramy dĺžok skupín chýb
     _, txt_rocna        = zachyt_vystup(rocna_analyza_ziarenia,        df, output_dir)             # Ročná analýza žiarenia
-    _, txt_mesiacna     = zachyt_vystup(denna_analyza_pre_mesiace,     df, output_dir)             # Mesačné denné profily
-    _, txt_korelacie    = zachyt_vystup(korelacie_parametrov,          df, output_dir)             # Korelačná matica
+    _, txt_mesiacna     = zachyt_vystup(denna_analyza_pre_mesiace,     df, output_dir)             # Mesačné denné profily žiarenia
+    _, txt_korelacie    = zachyt_vystup(korelacie_parametrov,          df, output_dir)             # Korelačná matica a scatter ploty
 
     # ----------------------------------------------------------
-    # Načítanie obrázkov ako base64
+    # Načítanie obrázkov ako base64 reťazcov
     # ----------------------------------------------------------
-    print("  Načítavam obrázky...")   # Informujeme o začatí kódovania obrázkov
+    print("  Načítavam obrázky...")   # Informujeme o začatí kódovania
 
     def img(nazov):
-        """Skratka: načíta obrázok z output_dir a vráti base64 string."""
-        return obrazok_na_base64(os.path.join(output_dir, nazov))   # Zostavíme cestu a zakódujeme
+        """Pomocná funkcia: zostaví cestu k obrázku v output_dir a zakóduje ho do base64."""
+        return obrazok_na_base64(os.path.join(output_dir, nazov))   # os.path.join bezpečne spája adresár a názov súboru
 
-    obrazky = {   # Slovník: kľúč → base64 reťazec obrázku (alebo None ak neexistuje)
-        'statistiky_csv':         os.path.join(output_dir, 'suhrne_statistiky.csv'),   # CSV súbor štatistík
-        'histogram_dni':          img('histogram_chybajucich_dni.png'),                # Histogram chýbajúcich dní
-        'histogram_vzoriek':      img('histogram_vzoriek_za_den.png'),                 # Distribúcia vzoriek za deň
-        'vzorky_casovy':          img('vzorky_za_den_casovy_priebeh.png'),             # Časový priebeh vzoriek
-        'histogram_poskodene':    img('histogram_dlzok_poskodennych.png'),             # Histogram dĺžok chýb
-        'rocna_analyza':          img('rocna_analyza_ziarenia.png'),                   # Ročná analýza žiarenia
-        'mesiacna_analyza':       img('denna_analyza_mesiacov.png'),                   # Mesačné denné profily
-        'heatmapa':               img('heatmapa_korelacie.png'),                       # Korelačná heatmapa
-        'scatter':                img('scatter_korelacie.png'),                        # Scatter ploty korelácie
+    obrazky = {   # Slovník: kľúč (str) → base64 reťazec alebo None (ak súbor neexistuje)
+        'statistiky_csv':         os.path.join(output_dir, 'suhrne_statistiky.csv'),   # Cesta k CSV (nie base64 – načítame inak)
+        'histogram_dni':          img('histogram_chybajucich_dni.png'),                # Histogram chýbajúcich dní podľa mesiaca
+        'histogram_vzoriek':      img('histogram_vzoriek_za_den.png'),                 # Distribúcia počtu vzoriek za deň
+        'vzorky_casovy':          img('vzorky_za_den_casovy_priebeh.png'),             # Časový priebeh počtu vzoriek
+        'histogram_poskodene':    img('histogram_dlzok_poskodennych.png'),             # Histogram dĺžok skupín poškodených vzoriek
+        'rocna_analyza':          img('rocna_analyza_ziarenia.png'),                   # Ročný priebeh žiarenia s pásom ±1σ
+        'mesiacna_analyza':       img('denna_analyza_mesiacov.png'),                   # Denné profily žiarenia pre každý mesiac
+        'heatmapa':               img('heatmapa_korelacie.png'),                       # Korelačná heatmapa (Pearson)
+        'scatter':                img('scatter_korelacie.png'),                        # Scatter ploty vybraných párov
     }
 
-    # Načítanie CSV štatistík do HTML tabuľky
-    stats_csv = os.path.join(output_dir, 'suhrne_statistiky.csv')   # Cesta k CSV so štatistikami
-    if os.path.exists(stats_csv):   # Skontrolujeme, či súbor existuje
-        df_stats = pd.read_csv(stats_csv, index_col=0)               # Načítame štatistiky do DataFrame
-        tabulka_html = df_stats.round(3).to_html(classes='stats-tabulka', border=0)   # Konverzia na HTML tabuľku
+    # Načítanie CSV štatistík a konverzia na HTML tabuľku
+    stats_csv = os.path.join(output_dir, 'suhrne_statistiky.csv')   # Cesta k CSV so súhrnnými štatistikami
+    if os.path.exists(stats_csv):   # Skontrolujeme, či CSV súbor existuje (mohol byť vygenerovaný skôr)
+        df_stats = pd.read_csv(stats_csv, index_col=0)               # Načítame CSV; index_col=0 = prvý stĺpec je index (count, mean, std, ...)
+        tabulka_html = df_stats.round(3).to_html(classes='stats-tabulka', border=0)   # round(3) = 3 desatinné miesta; classes = CSS trieda pre štýlovanie
     else:
         tabulka_html = '<p>Štatistiky nie sú dostupné.</p>'   # Náhradný text ak CSV chýba
 
     # ----------------------------------------------------------
-    # Pomocná funkcia pre vkladanie obrázkov
+    # Pomocná funkcia pre vkladanie obrázkov do HTML
     # ----------------------------------------------------------
     def img_tag(kluc, alt='', sirka='100%'):
-        """Vráti <img> tag s base64 obrázkom, alebo prázdny reťazec ak obrázok chýba."""
-        if obrazky.get(kluc):   # Skontrolujeme, či obrázok bol úspešne načítaný
-            return (f'<img src="data:image/png;base64,{obrazky[kluc]}" '   # Vložíme base64 dáta priamo do src
-                    f'alt="{alt}" style="width:{sirka}; max-width:100%;">')
-        return f'<p class="chyba">Obrázok "{alt}" nie je dostupný.</p>'   # Fallback ak obrázok chýba
+        """
+        Vráti HTML <img> tag s obrázkom zakódovaným v base64, alebo chybovú správu ak obrázok chýba.
+
+        Parametre:
+            kluc  – kľúč do slovníka obrazky (str)
+            alt   – alternatívny text obrázku pre prístupnosť (str)
+            sirka – CSS šírka obrázku (str, napr. '100%' alebo '50%')
+        """
+        if obrazky.get(kluc):   # Skontrolujeme, či pre daný kľúč existuje base64 reťazec (nie None)
+            return (f'<img src="data:image/png;base64,{obrazky[kluc]}" '   # Vložíme base64 dáta priamo do atribútu src (Data URI)
+                    f'alt="{alt}" style="width:{sirka}; max-width:100%;">')  # alt = popis pre screen readery; max-width = responsívnosť
+        return f'<p class="chyba">Obrázok "{alt}" nie je dostupný.</p>'   # Fallback: zobraziť text ak obrázok chýba
 
     # ----------------------------------------------------------
-    # Zostavenie HTML
+    # Zostavenie HTML dokumentu pomocou f-string šablóny
     # ----------------------------------------------------------
-    print("  Zostavujem HTML...")   # Informujeme o začatí zostavovania HTML dokumentu
+    print("  Zostavujem HTML...")   # Informujeme o začatí zostavovania HTML
 
     html = f"""<!DOCTYPE html>
 <html lang="sk">
@@ -611,12 +643,12 @@ def generuj_html_report(csv_subor, output_dir):
 </html>"""
 
     # ----------------------------------------------------------
-    # Uloženie HTML súboru
+    # Uloženie hotového HTML súboru na disk
     # ----------------------------------------------------------
-    cesta_html = os.path.join(output_dir, 'report.html')   # Cesta k výstupu
-    with open(cesta_html, 'w', encoding='utf-8') as f:     # Otvoríme súbor pre zápis (UTF-8 kvôli slovenčine)
-        f.write(html)   # Zapíšeme celý HTML dokument
+    cesta_html = os.path.join(output_dir, 'report.html')   # Zostavíme cestu: output_dir + 'report.html'
+    with open(cesta_html, 'w', encoding='utf-8') as f:     # Otvoríme súbor pre zápis; UTF-8 je nutné pre slovenské znaky (á, é, č, ...)
+        f.write(html)   # Zapíšeme celý HTML reťazec do súboru
 
-    velkost_kb = os.path.getsize(cesta_html) / 1024   # Vypočítame veľkosť súboru v kB
-    print(f"  HTML report uložený: {cesta_html}  ({velkost_kb:.0f} kB)")   # Vypíšeme cestu a veľkosť
-    return cesta_html   # Vrátime cestu k vygenerovanému HTML súboru
+    velkost_kb = os.path.getsize(cesta_html) / 1024   # os.path.getsize vráti veľkosť v bajtoch; delíme 1024 pre kB
+    print(f"  HTML report uložený: {cesta_html}  ({velkost_kb:.0f} kB)")   # Informujeme o úspešnom uložení a veľkosti súboru
+    return cesta_html   # Vrátime cestu k vygenerovanému HTML súboru (môže využiť volajúci kód)
